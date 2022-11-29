@@ -23,7 +23,7 @@ const HomePage = () => {
         check.current = false
         fetchAssets()
       }
-    }, 1000)
+    }, 2000)
   }, [limit])
   return (
     <Grid
