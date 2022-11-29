@@ -47,11 +47,11 @@ const router = createBrowserRouter([
 ])
 
 root.render(
-  <React.StrictMode>
+  <>
     <ChakraProvider>
       <RouterProvider router={router} /> 
     </ChakraProvider>
-  </React.StrictMode>
+  </>
 );
 
 // If you want to start measuring performance in your app, pass a function

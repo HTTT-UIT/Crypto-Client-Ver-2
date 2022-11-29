@@ -1,13 +1,32 @@
-import { Center, Text, Grid, GridItem, Wrap, WrapItem, Flex, Stat, StatHelpText, StatArrow, Box } from "@chakra-ui/react"
+/* eslint-disable react-hooks/rules-of-hooks */
+import { Center, Text, Grid, GridItem, Wrap, WrapItem, Flex, Stat, StatHelpText, StatArrow, Box, Card, CardBody, Button } from "@chakra-ui/react"
+import { useEffect, useRef, useState } from "react"
+import {useJwt} from "../../jwt/jwt"
 import CardInHeader from "./component/CardInHeader"
 import CarouselCS from "./component/Carousel"
 import TableCS from "./component/Table"
 
 const HomePage = () => {
+  const [assets, setAssets] = useState([])
+  const [limit, setLimit] = useState(100)
+  const timeRef = useRef()
+  useEffect(() => {
+    const fetchAssets = async () => {
+      const response = await useJwt().jwt.getData(limit)
+      setAssets(response.data.data)
+      timeRef.current = setTimeout(() => {
+        fetchAssets()
+      }, 1500)
+    }
+
+    clearTimeout(timeRef.current)
+    fetchAssets()
+  
+  }, [limit])
   return (
     <Grid
       h='200px'
-      templateRows='repeat(3, 1fr)'
+      templateRows='repeat(4, 1fr)'
       templateColumns='repeat(2, 1fr)'
       gap={4}
       paddingTop="24px"
@@ -36,7 +55,7 @@ const HomePage = () => {
           </Text>
         </Flex>
       </GridItem>
-      <GridItem colSpan={2} bg='transparent' padding="10px 0 0 0">
+      {/* <GridItem colSpan={2} bg='transparent' padding="10px 0 0 0">
         <Wrap spacing='30px' justify={"center"}>
           <WrapItem>
             <Center>
@@ -54,18 +73,36 @@ const HomePage = () => {
             </Center>
           </WrapItem>
           <WrapItem>
-            {/* <CarouselCS /> */}
-            {/* <Center> */}
-         
-              {/* <CardInHeader title={"⭐ Các bài viết đáng chú ý"}/> */}
-            {/* </Center> */}
           </WrapItem>
         </Wrap>
+      </GridItem> */}
+      <GridItem colSpan={2} bg='transparent' padding={"10px 10px 0 10px"}>
+        <Card boxShadow={"2xl"}>
+          <CardBody>
+            <TableCS data={assets}/>
+          </CardBody>
+        </Card>
       </GridItem>
-      <GridItem colSpan={2} bg='transparent' padding={10}>
-        <TableCS />
+      <GridItem colSpan={2} bg='transparent' paddingBottom={"20px"}>
+        <Flex justify={"center"}>
+          <Button
+            bgColor={"black"}
+            isLoading={assets.length !== limit}
+            loadingText='Đang tải'
+            spinnerPlacement='start'
+            // leftIcon={<Icon as={MdArticle} w="4" h="4"/>}
+            color={"white"}
+            onClick={() => setLimit(limit+ 50)}
+            _hover={{bg: "black"}}
+            _active={{bg: "transparent"}}>
+              {/* <Link to={"/blog"}> */}
+                <Text fontSize={"sm"}>
+                    XEM THÊM
+                </Text>
+              {/* </Link> */}
+          </Button>
+        </Flex>
       </GridItem>
-      <GridItem colSpan={2} bg='papayawhip' />
       <GridItem colSpan={2} bg='tomato' />
     </Grid>
   )
