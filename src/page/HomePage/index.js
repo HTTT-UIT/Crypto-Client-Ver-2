@@ -10,18 +10,20 @@ const HomePage = () => {
   const [assets, setAssets] = useState([])
   const [limit, setLimit] = useState(100)
   const timeRef = useRef()
+  const check = useRef(true)
   useEffect(() => {
     const fetchAssets = async () => {
       const response = await useJwt().jwt.getData(limit)
       setAssets(response.data.data)
-      timeRef.current = setTimeout(() => {
-        fetchAssets()
-      }, 1500)
+      check.current = true
     }
-
-    clearTimeout(timeRef.current)
-    fetchAssets()
-  
+    clearInterval(timeRef.current)
+    timeRef.current = setInterval(() => {
+      if (check.current) {
+        check.current = false
+        fetchAssets()
+      }
+    }, 1000)
   }, [limit])
   return (
     <Grid

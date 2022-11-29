@@ -41,7 +41,7 @@ const TableCS = ({data}) => {
       else if (Number.parseFloat(stateData[index].priceUsd) > Number.parseFloat(item.priceUsd)) arr.push("decrease")
       else arr.push(state.current[index])
     })
-    state.current = arr
+    state.current = [...arr]
     setTimeout(()=> {
       setStateData(data)
     }, 1000)
@@ -100,7 +100,7 @@ const TableCS = ({data}) => {
           {
             data.map((item, index) => {
               return (
-                <Tr _hover={{bg: '#efefef'}} bg={ (state.current.length <= index || state.current[index] === "null" || stateData[index].priceUsd === item.priceUsd) ? "transparent" : ((state.current[index] === "decrease") ? "#ffe6e6" : "#e6ffe6")}>
+                <Tr _hover={{bg: '#efefef'}} bg={ (state.current.length <= index || stateData.length <= index || state.current[index] === "null" || stateData[index].priceUsd === item.priceUsd) ? "transparent" : ((state.current[index] === "decrease") ? "#ffe6e6" : "#e6ffe6")}>
                   <Td>
                     {
                       item.rank
