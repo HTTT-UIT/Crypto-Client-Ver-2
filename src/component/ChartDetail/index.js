@@ -39,7 +39,7 @@ const ChartDetail = ({item}) => {
         console.log('fetch data failed', error);
       });
   };
-  
+
   const config = {
     data,
     xField: 'date',
@@ -50,7 +50,7 @@ const ChartDetail = ({item}) => {
     },
     yAxis: {
       range: [0, 1],
-      tickCount: 1
+      tickCount: 7
     },
     areaStyle: () => {
       return {
