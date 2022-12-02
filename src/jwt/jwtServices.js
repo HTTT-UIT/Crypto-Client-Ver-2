@@ -43,7 +43,7 @@ export default class JwtService {
     localStorage.setItem(this.jwtConfig.storageTokenKeyName, value)
   }
 
-  async getData(limit) {
+  async getDataAssets(limit) {
     return axios({
       method: 'get',
       url: this.jwtConfig.coinAssetsEndPoint(limit),

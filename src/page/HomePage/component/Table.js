@@ -151,7 +151,7 @@ const TableCS = ({data}) => {
             {
               data.map((item, index) => {
                 return (
-                  <Tooltip label="Xem chi tiết (đúp chuột)" aria-label='A tooltip'>
+                  <Tooltip label="Xem chi tiết" aria-label='A tooltip'>
                     <Tr onClick={() => openDetail(item)}  _hover={{bg: '#efefef'}} bg={ (state.current.length <= index || stateData.length <= index || state.current[index] === "null" || stateData[index].priceUsd === item.priceUsd) ? "transparent" : ((state.current[index] === "decrease") ? "#ffe6e6" : "#e6ffe6")}>
                       <Td>
                         {

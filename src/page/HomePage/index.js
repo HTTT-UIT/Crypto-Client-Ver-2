@@ -13,7 +13,7 @@ const HomePage = () => {
   const check = useRef(true)
   useEffect(() => {
     const fetchAssets = async () => {
-      const response = await useJwt().jwt.getData(limit)
+      const response = await useJwt().jwt.getDataAssets(limit)
       setAssets(response.data.data)
       check.current = true
     }
