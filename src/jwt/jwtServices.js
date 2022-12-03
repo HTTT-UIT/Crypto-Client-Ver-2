@@ -80,4 +80,8 @@ export default class JwtService {
       })
     })
   }
+
+  signOut (params) {
+    localStorage.removeItem(this.jwtConfig.storageTokenKeyName)
+  }
 }

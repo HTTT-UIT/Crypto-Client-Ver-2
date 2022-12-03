@@ -23,12 +23,22 @@ export const handleInfo = (title, text) => {
 }
 
 
-export const handleSuccess = (title, text) => {
-  MySwal.fire({
+export const handleSuccess = (title, callback) => {
+  MySwal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 1500,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer)
+      toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+  }).fire({
     icon: 'success',
     title,
-    html: text,
-    confirmButtonText: "Trở lại"
+  }).then((res) => {
+    callback()
   })
 }
 
