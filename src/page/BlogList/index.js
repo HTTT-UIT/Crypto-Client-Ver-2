@@ -15,6 +15,7 @@ import {
   Container,
   VStack,
 } from '@chakra-ui/react';
+import { useNavigate } from 'react-router';
 
 
 export const BlogTags = (props) => {
@@ -49,6 +50,7 @@ export const BlogAuthor = (props) => {
 };
 
 const ArticleList = () => {
+  const navigate = useNavigate()
   return (
     <Container maxW={'7xl'} p="12">
       <Heading as="h1" fontSize="2xl">Danh mục bài viết</Heading>
@@ -76,6 +78,7 @@ const ArticleList = () => {
                 }
                 alt="some good alt text"
                 objectFit="contain"
+                onClick={() => navigate("/blog/1")}
               />
             </Link>
           </Box>
