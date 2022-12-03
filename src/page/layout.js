@@ -44,11 +44,11 @@ const Layout = () => {
           <PopoverTrigger>
             <Button leftIcon={<ChatIcon/>}>Chatbot</Button>
           </PopoverTrigger>
-          <PopoverContent color='white' bg='#efefef' borderColor='black' height={"80vh"} width={"30vw"} minW={"300px"} minH={"300px"}>
+          <PopoverContent shadow={"xl"} color='white' bg='white' borderWidth={"2px"} borderColor='teal.500' height={"80vh"} width={"30vw"} minW={"300px"} minH={"300px"}>
             <PopoverHeader pt={4} fontWeight='bold' border='0' color="black">
               <Flex align={"center"}>
                 <Icon as={TbRobot} w="10" h="10" paddingEnd={"12px"}/>
-                <Text>Cộng tác viên Bot</Text>
+                <Text fontSize={"xl"}>Trợ lý SCG</Text>
               </Flex>
             </PopoverHeader>
             <PopoverArrow />

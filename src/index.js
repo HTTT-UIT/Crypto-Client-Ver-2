@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import { Button, ChakraProvider } from '@chakra-ui/react';
-import {createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom'
+import {createBrowserRouter, HashRouter, Outlet, RouterProvider } from 'react-router-dom'
 import Header from './component/header';
 import Layout from './page/layout';
 import HomePage from './page/HomePage';

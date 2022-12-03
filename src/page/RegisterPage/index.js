@@ -55,8 +55,9 @@ const RegisterPage = () => {
         password
       })
       if (response.status === 200) {
-        handleSuccess("Thành công", "Đăng ký thành viên thành công")
-        navigate("#/login")
+        handleSuccess("Đăng ký thành viên thành công", () => {
+          navigate("/login")
+        })
       }
       
     } catch (error) {

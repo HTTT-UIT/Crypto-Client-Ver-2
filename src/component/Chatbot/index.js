@@ -30,16 +30,16 @@ const Chatbot = (props) => {
   const styleOptions = {
     emojiSet: true,
     botAvatarImage:
-      "https://cdn-icons-png.flaticon.com/512/4712/4712035.png",
-    botAvatarInitials: "BF",
-    userAvatarInitials: "WC",
-
+      "https://znews-photo-fbcrawler.zadn.vn/Uploaded/mzdqv/2016_07_04/tumblr_lk6lwhaog71qfbh9jgif_480_480_0_64000_0_1_0.gif.jpg",
+    botAvatarInitials: "Bot",
+    userAvatarInitials: "Bạn",
+    userAvatarImage: "https://i.pinimg.com/originals/80/25/a9/8025a9f63435b64305b1cf045c76fd70.jpg",
     hideUploadButton: true,
   };
 
   const styleSet = createStyleSet({
-    bubbleBackground: " #f2f2f2",
-    bubbleFromUserBackground: "rgba(0, 255, 0, .1)",
+    bubbleBackground: "#f2f2f2",
+    bubbleFromUserBackground: "#b2d8d8",
     rootHeight: "65vh",
     rootWidth: "100%",
     backgroundColor: " #ffffff",
@@ -60,7 +60,7 @@ const Chatbot = (props) => {
         directLine={directLine}
         styleOptions={styleOptions}
         styleSet={styleSet}
-        userID="-12"
+        userID="-5"
       />
     </div>
   );
