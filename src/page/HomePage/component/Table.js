@@ -25,6 +25,9 @@ import {
   Button,
   useDisclosure,
   Tooltip,
+  Stack,
+  Radio,
+  RadioGroup,
 } from '@chakra-ui/react'
 
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
@@ -68,38 +71,51 @@ const TableCS = ({data}) => {
     setDataChoose(item)
     onOpen()
   }
+  const [value, setValue] = useState('day')
+
   return (
     <>
-      <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose} size="6xl">
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>
-            <Box>
-              <Flex justify={"left"} alignItems="center">
-                <Avatar width={12} height={12} name='' src={`https://assets.coincap.io/assets/icons/${dataChoose.symbol.toLowerCase()}@2x.png`} />
-                <Box>
-                  <Text fontSize={"lg"} fontWeight={500} marginStart="7px">
-                    {
-                      dataChoose.name 
-                    }
-                  </Text>
-                </Box>
+      {isOpen && (
+        <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose} size="6xl">
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>
+              <Box>
+                <Flex justify={"left"} alignItems="center">
+                  <Avatar width={12} height={12} name='' src={`https://assets.coincap.io/assets/icons/${dataChoose.symbol.toLowerCase()}@2x.png`} />
+                  <Box>
+                    <Text fontSize={"lg"} fontWeight={500} marginStart="7px">
+                      {
+                        dataChoose.name 
+                      }
+                    </Text>
+                  </Box>
 
-              </Flex>
-            </Box>
-          </ModalHeader>
-          <ModalBody pb={6}>
-            <ChartDetail item={dataChoose}/>
-          </ModalBody>
+                </Flex>
+              </Box>
+            </ModalHeader>
+            <ModalBody pb={6}>
+              <RadioGroup onChange={setValue} value={value} marginBottom="12px">
+                <Stack direction='row'>
+                  <Radio value='day'>Hôm nay</Radio>
+                  <Radio value='week'>7 ngày gần nhất</Radio>
+                  <Radio value='month'>30 ngày gần nhất</Radio>
+                  <Radio value='year'>Năm nay</Radio>
+                  <Radio value='year2'>2 năm gần nhất</Radio>
+                </Stack>
+              </RadioGroup>
+              <ChartDetail item={dataChoose} filter={value}/>
+            </ModalBody>
 
-          <ModalFooter>
-            <Button colorScheme='blue' mr={3}>
-              Save
-            </Button>
-            <Button onClick={onClose}>Cancel</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+            <ModalFooter>
+              {/* <Button colorScheme='blue' mr={3}>
+                Save
+              </Button> */}
+              <Button onClick={onClose}>Trở lại</Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      )}
       <TableContainer>
         <Table variant='simple' size={"sm"}>
           <TableCaption>SCG - Thị trường tiền ảo thế giới</TableCaption>
