@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   Flex,
   Heading,
@@ -14,10 +14,13 @@ import {
   FormControl,
   FormHelperText,
   InputRightElement,
-  Text
+  Text,
+  FormErrorMessage
 } from "@chakra-ui/react";
 import { FaUserAlt, FaLock, FaIdCard } from "react-icons/fa";
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
+import { handleInfo, handleSuccess, handleWarning } from "../../component/SweetAlert";
+import { useJwt } from "../../jwt/jwt";
 
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
@@ -25,9 +28,39 @@ const CIdCard = chakra(FaIdCard);
 
 const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
-
   const handleShowClick = () => setShowPassword(!showPassword);
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [countSubmit, setCountSubmit] = useState(0)
+  const navigate = useNavigate()
 
+  const handleSubmit = async () => {
+    try {
+      setCountSubmit(prev => prev + 1)
+      console.log(username, password, confirmPassword)
+      if (username === "" || password === "" || confirmPassword === "") {
+        handleInfo("Chú ý", "Tên đăng nhập, mật khẩu và xác nhận mật khẩu không được trống")
+        return
+      }
+      if (password !== confirmPassword) {
+        handleInfo("Chú ý", "Mật khẩu và mật khẩu xác nhận phải giống nhau.")
+        return
+      }
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const response = await useJwt().jwt.register({
+        username,
+        password
+      })
+      if (response.status === 200) {
+        handleSuccess("Thành công", "Đăng ký thành viên thành công")
+        navigate("#/login")
+      }
+      
+    } catch (error) {
+      handleWarning("Cảnh báo", "Tên đăng nhập hiện tại đã có trong hệ thống.<br/>Vui lòng chọn tên đăng nhập khác.")
+    }
+  }
   return (
     <Flex
       flexDirection="column"
@@ -44,7 +77,7 @@ const RegisterPage = () => {
         alignItems="center"
       >
         <Avatar bg="teal.500" />
-        <Heading color="teal.400">SCG Group</Heading>
+        <Heading color="teal.400" onClick={() => navigate('/')} cursor="pointer">SCG Group</Heading>
         <Box minW={{ base: "90%", md: "468px" }}>
           <form>
             <Stack
@@ -53,7 +86,7 @@ const RegisterPage = () => {
               backgroundColor="whiteAlpha.900"
               boxShadow="md"
             >
-              <FormControl>
+              {/* <FormControl>
                 <InputGroup>
                   <InputLeftElement
                     pointerEvents="none"
@@ -61,14 +94,14 @@ const RegisterPage = () => {
                   />
                   <Input type="text" placeholder="Họ và tên" />
                 </InputGroup>
-              </FormControl>
+              </FormControl> */}
               <FormControl>
                 <InputGroup>
                   <InputLeftElement
                     pointerEvents="none"
                     children={<CFaUserAlt color="gray.300" />}
                   />
-                  <Input type="email" placeholder="Địa chỉ email" />
+                  <Input isInvalid={countSubmit > 0 && username === ""} type="text" placeholder="Tên đăng nhập" onChange={(e) => setUsername(e.target.value)} />
                 </InputGroup>
               </FormControl>
               <FormControl>
@@ -81,6 +114,8 @@ const RegisterPage = () => {
                   <Input
                     type={showPassword ? "text" : "password"}
                     placeholder="Mật khẩu"
+                    onChange={(e) => setPassword(e.target.value)}
+                    isInvalid={countSubmit > 0 && password === ""}
                   />
                   <InputRightElement width="4.5rem">
                     <Button h="1.75rem" size="sm" onClick={handleShowClick}>
@@ -99,18 +134,17 @@ const RegisterPage = () => {
                   <Input
                     type={showPassword ? "text" : "password"}
                     placeholder="Xác nhận mật khẩu"
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    isInvalid={countSubmit > 0 && confirmPassword === ""} 
                   />
                 </InputGroup>
-                <FormHelperText textAlign="right">
-                  <Link>forgot password?</Link>
-                </FormHelperText>
               </FormControl>
               <Button
                 borderRadius={0}
-                type="submit"
                 variant="solid"
                 colorScheme="teal"
                 width="full"
+                onClick={() => handleSubmit()}
               >
                 Đăng ký
               </Button>

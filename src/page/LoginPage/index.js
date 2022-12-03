@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useState } from "react";
 import {
   Flex,
@@ -17,16 +18,46 @@ import {
   Text
 } from "@chakra-ui/react";
 import { FaUserAlt, FaLock } from "react-icons/fa";
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
+import { handleInfo, handleSuccess, handleWarning } from "../../component/SweetAlert";
+import { useJwt } from "../../jwt/jwt";
 
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const [countSubmit, setCountSubmit] = useState(0)
 
+  if (useJwt().jwt.getToken() !== undefined && useJwt().jwt.getToken() !== null) {
+    console.log(useJwt().jwt.getToken())
+    window.location.href = "/"
+  }
   const handleShowClick = () => setShowPassword(!showPassword);
 
+  const handleSubmit = async () => {
+    try {
+      setCountSubmit(prev => prev + 1)
+      if (username === "" || password === "") {
+        handleInfo("Chú ý", "Tên đăng nhập và mật khẩu không được trống")
+        return
+      }
+  
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const response = await useJwt().jwt.login({
+        username,
+        password
+      })
+  
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      useJwt().jwt.setToken(response.data.token)
+      handleSuccess("Thành công", "Đăng nhập thành công")
+    } catch (error) {
+      handleInfo("Chú ý", "Tên đăng nhập hoặc mật khẩu chưa đúng.")
+    }
+  }
   return (
     <Flex
       flexDirection="column"
@@ -58,7 +89,7 @@ const LoginPage = () => {
                     pointerEvents="none"
                     children={<CFaUserAlt color="gray.300" />}
                   />
-                  <Input type="email" placeholder="email address" />
+                  <Input isInvalid={countSubmit > 0 && username === ""} type="text" placeholder="Tên đăng nhập" onChange={(e) => setUsername(e.target.value)} />
                 </InputGroup>
               </FormControl>
               <FormControl>
@@ -70,7 +101,9 @@ const LoginPage = () => {
                   />
                   <Input
                     type={showPassword ? "text" : "password"}
-                    placeholder="Password"
+                    placeholder="Mật khẩu"
+                    onChange={(e) => setPassword(e.target.value)}
+                    isInvalid={countSubmit > 0 && password === ""}
                   />
                   <InputRightElement width="4.5rem">
                     <Button h="1.75rem" size="sm" onClick={handleShowClick}>
@@ -79,15 +112,15 @@ const LoginPage = () => {
                   </InputRightElement>
                 </InputGroup>
                 <FormHelperText textAlign="right">
-                  <Link>forgot password?</Link>
+                  <Link>Quên mật khẩu?</Link>
                 </FormHelperText>
               </FormControl>
               <Button
                 borderRadius={0}
-                type="submit"
                 variant="solid"
                 colorScheme="teal"
                 width="full"
+                onClick={handleSubmit}
               >
                 Đăng nhập
               </Button>

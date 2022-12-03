@@ -1,6 +1,6 @@
 import JwtService from "./jwtServices";
 import jwtConfig from "./jwtConfig"
-export function useJwt () {
+export const useJwt =  () => {
   const jwt = new JwtService(jwtConfig)
   return {
     jwt

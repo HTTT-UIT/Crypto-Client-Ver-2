@@ -52,4 +52,32 @@ export default class JwtService {
       }
     })
   }
+
+  async login(params) {
+    return axios({
+      method: "post",
+      url: this.jwtConfig.loginEndPoint,
+      headers: {
+        "Content-Type": "application/json"
+      },
+      data: JSON.stringify({
+        username: params.username,
+        password: params.password
+      })
+    })
+  }
+
+  async register(params) {
+    return axios({
+      method: "post",
+      url: this.jwtConfig.registerEndPoint,
+      headers: {
+        "Content-Type": "application/json"
+      },
+      data: JSON.stringify({
+        username: params.username,
+        password: params.password
+      })
+    })
+  }
 }
