@@ -1,16 +1,38 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { DeleteIcon } from "@chakra-ui/icons"
 import { Avatar, Box, Button, Card, CardBody, CardFooter, CardHeader, Container, Divider, Flex, Heading, Icon, Image, Stack, Text, Textarea, VStack, Wrap, WrapItem } from "@chakra-ui/react"
+import { useEffect, useState } from "react"
 import { MdFlag, MdSave, MdSend } from "react-icons/md"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
+import { useJwt } from "../../jwt/jwt"
 import { BlogAuthor, BlogTags } from "../BlogList"
 
 
 const BlogDetail = () => {
+  const [data, setData] = useState({})
+  const {id} = useParams()
+
+  const  fetchData = async () => {
+    try {
+      const response = await useJwt().jwt.getArticleWithID({
+        id
+      })
+      setData(response.data)
+    } catch (error) {
+      
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
+  const date = new Date(data.createdAt)
   return (
     <Container maxW={"7xl"} p="10">
       <VStack paddingTop="40px" spacing="2" alignItems="flex-start">
-        <Heading as="h2">What we write about</Heading>
-        <Card>
+        <Heading as="h2">{data.header}</Heading>
+        <Card width={"100%"}>
           <CardHeader>
             <Button 
               leftIcon={<Icon as={MdFlag} w="4" h="4"/>} 
@@ -27,34 +49,14 @@ const BlogDetail = () => {
             </Button>
           </CardHeader>
           <CardBody>
-            <Text as="p" fontSize="lg" textAlign={"justify"}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-              condimentum quam arcu, eu tempus tortor molestie at. Vestibulum
-              pretium condimentum dignissim. Vestibulum ultrices vitae nisi sed
-              imperdiet. Mauris quis erat consequat, commodo massa quis, feugiat
-              sapien. Suspendisse placerat vulputate posuere. Curabitur neque
-              tortor, mattis nec lacus non, placerat congue elit.
-            </Text>
-            <Text as="p" fontSize="lg"  textAlign={"justify"}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-              condimentum quam arcu, eu tempus tortor molestie at. Vestibulum
-              pretium condimentum dignissim. Vestibulum ultrices vitae nisi sed
-              imperdiet. Mauris quis erat consequat, commodo massa quis, feugiat
-              sapien. Suspendisse placerat vulputate posuere. Curabitur neque
-              tortor, mattis nec lacus non, placerat congue elit.
-            </Text>
-            <Text as="p" fontSize="lg"  textAlign={"justify"}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-              condimentum quam arcu, eu tempus tortor molestie at. Vestibulum
-              pretium condimentum dignissim. Vestibulum ultrices vitae nisi sed
-              imperdiet. Mauris quis erat consequat, commodo massa quis, feugiat
-              sapien. Suspendisse placerat vulputate posuere. Curabitur neque
-              tortor, mattis nec lacus non, placerat congue elit.
-            </Text>
+            <Box
+              dangerouslySetInnerHTML={{__html: data.content}}
+            >
+            </Box>
             <Flex justify={"end"} width="100%" direction={"row"}>
               <Text fontSize={"md"} color={"#ababab"}>
-                Tác giả: Hoàng Phú <br/>
-                Đăng ngày: 26-11-2022
+                Tác giả: {data.authorName} <br/>
+                Đăng ngày: {`${`0${date.getDate()}`.slice(-2)}-${`0${date.getMonth() + 1}`.slice(-2)}-${date.getFullYear()}`}
               </Text>
             </Flex>
           </CardBody>

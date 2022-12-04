@@ -91,4 +91,18 @@ export default class JwtService {
       url: this.jwtConfig.getArticlesEndPoint(params),
     })
   }
+
+  async getArticleWithID (params) {
+    return axios({
+      method: "get",
+      url: this.jwtConfig.getArticleWithIDEndPoint(params)
+    })
+  }
+
+  async getTags () {
+    return axios({
+      method: "get",
+      url: this.jwtConfig.getTagsEndPoint()
+    })
+  }
 }

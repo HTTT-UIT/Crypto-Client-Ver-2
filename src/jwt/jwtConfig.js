@@ -10,5 +10,8 @@ export default {
   registerEndPoint: "/api/Identity/signup",
   loginEndPoint: "/api/Identity/login",
 
-  getArticlesEndPoint: (params) => `/api/Blogs?page=${params.page}&pageSize=${params.pageSize}`
+  getArticlesEndPoint: (params) => `/api/Blogs/?${params.tagIds}page=${params.page}&pageSize=${params.pageSize}`,
+  getArticleWithIDEndPoint: (params) => `/api/Blogs/${params.id}`,
+
+  getTagsEndPoint: () => `/api/Tags`,
 }

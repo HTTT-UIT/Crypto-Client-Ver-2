@@ -18,6 +18,7 @@ import {
   Flex,
   Button,
   Icon,
+  Spinner,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router';
 import { useJwt } from "../../jwt/jwt";
@@ -61,44 +62,70 @@ const ArticleList = () => {
   const [dataItems, setDataItems] = useState([])
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(2)
+  const [tagIds, setTagIds] = useState("")
+  const [options, setOptions] = useState([])
+  const [checkSpinner, setCheckSpinner] = useState(false)
 
   const fetchData = async (params) => {
     try {
       const response = await useJwt().jwt.getArticles(params)
-      console.log(response)
+      setCheckSpinner(false)
+      const optionsResponse = await useJwt().jwt.getTags()
+      console.log(optionsResponse)
       setDataItems(response.data.items)
       setData(response.data)
+      setOptions(optionsResponse.data.items)
     } catch (error) {
       
     }
   }
 
+  const handleFilter = (value) => {
+    console.log(value)
+    const arrTagId = value.map(item => `tagIds=${item}&`)
+    setTagIds(arrTagId)
+  }
+
   useEffect(() => {
+    setCheckSpinner(true)
     setTimeout(() => {
       fetchData({
         page,
-        pageSize
+        pageSize,
+        tagIds
       })
     }, 2000)
-  }, [page, pageSize])
+  }, [page, pageSize, tagIds])
 
   const navigate = useNavigate()
   return (
     <Container maxW={'7xl'} p="12">
-      <Heading as="h1" fontSize="2xl">DANH MỤC BÀI VIẾT</Heading>
+      <Box
+        display={"flex"}
+      >
+        <Heading as="h1" fontSize="2xl">DANH MỤC BÀI VIẾT</Heading>
+        {
+          checkSpinner && (
+            <Spinner marginStart={"12px"} />
+          )
+        }
+
+      </Box>
+
       <Box 
         position={"absolute"}
         right={"150px"}
         top={"124px"}
         display={"flex"}
+        zIndex={"999"}
         justifyContent={"right"}>
           <Box
             maxW={"200px"} 
           >
-            <MultiSelecCS title={"Thể loại"} options={["Bitcoin", "SCG"]} />
+            <MultiSelecCS onChange={(value) => handleFilter(value)} title={"Thể loại"} options={options} />
           </Box>
       </Box>
-      <Divider marginTop="7" marginBottom="10" />
+      {/* <Divider marginTop="7" marginBottom="10" /> */}
       {
         (dataItems.length > 0) && (
         <Box
@@ -125,7 +152,7 @@ const ArticleList = () => {
                   }
                   alt="some good alt text"
                   objectFit="contain"
-                  onClick={() => navigate(`/blog/${ dataItems[0].id}`)}
+                  onClick={() =>  window.location.href = (`/blog/${ dataItems[0].id}`)}
                 />
               </Link>
             </Box>
@@ -175,7 +202,7 @@ const ArticleList = () => {
                 <Link 
                   textDecoration="none" 
                   _hover={{ textDecoration: 'none' }}
-                  onClick={() => navigate(`/blog/${ dataItems[0].id}`)}>
+                  onClick={() =>  window.location.href = (`/blog/${ dataItems[0].id}`)}>
                   {
                     dataItems[0]['header']
                   }
@@ -209,7 +236,7 @@ const ArticleList = () => {
                       <Link 
                         textDecoration="none" 
                         _hover={{ textDecoration: 'none' }}
-                        onClick={() => navigate(`/blog/${item.id}`)}>
+                        onClick={() =>  window.location.href = (`/blog/${item.id}`)}>
                         <Image
                           transform="scale(1.0)"
                           src={
@@ -251,11 +278,15 @@ const ArticleList = () => {
                       <Link 
                         textDecoration="none" 
                         _hover={{ textDecoration: 'none' }}
-                        onClick={() => navigate(`/blog/${item.id}`)}>
+                        onClick={() => window.location.href = (`/blog/${item.id}`)}>
                         {item.header}
                       </Link>
                     </Heading>
-                    <Box textAlign={"justify"} fontSize="md" marginTop="2" dangerouslySetInnerHTML={{__html: item.content}}>
+                    <Box 
+                      textAlign={"justify"} 
+                      fontSize="md" 
+                      marginTop="2" 
+                      dangerouslySetInnerHTML={{__html: item.content}}>
                     </Box>
                     <BlogAuthor
                       name={item.authorName}
