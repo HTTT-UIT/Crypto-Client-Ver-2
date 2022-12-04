@@ -8,5 +8,7 @@ export default {
   coinAssetsEndPoint: (limit) => `https://api.coincap.io/v2/assets?limit=${limit}`,
 
   registerEndPoint: "/api/Identity/signup",
-  loginEndPoint: "/api/Identity/login"
+  loginEndPoint: "/api/Identity/login",
+
+  getArticlesEndPoint: (params) => `/api/Blogs?page=${params.page}&pageSize=${params.pageSize}`
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import { Button, ChakraProvider } from '@chakra-ui/react';
+import { extendTheme , ChakraProvider } from '@chakra-ui/react';
 import {createBrowserRouter, HashRouter, Outlet, RouterProvider } from 'react-router-dom'
 import Header from './component/header';
 import Layout from './page/layout';
@@ -12,6 +12,7 @@ import RegisterPage from './page/RegisterPage';
 import ArticleList from './page/BlogList';
 import NotFound from './page/ErrorPage';
 import BlogDetail from './page/BlogDetail';
+import {  MultiSelectTheme } from 'chakra-multiselect'
                       
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -46,9 +47,15 @@ const router = createBrowserRouter([
   },
 ])
 
+
+const theme = extendTheme({
+  components: {
+    MultiSelect: MultiSelectTheme
+  }
+})
 root.render(
   <>
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <RouterProvider router={router} /> 
     </ChakraProvider>
   </>

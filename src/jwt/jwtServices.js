@@ -81,7 +81,14 @@ export default class JwtService {
     })
   }
 
-  signOut (params) {
+  signOut () {
     localStorage.removeItem(this.jwtConfig.storageTokenKeyName)
+  }
+  
+  async getArticles (params) {
+    return axios({
+      method: "get",
+      url: this.jwtConfig.getArticlesEndPoint(params),
+    })
   }
 }
