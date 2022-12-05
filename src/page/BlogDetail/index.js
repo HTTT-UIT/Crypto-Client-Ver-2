@@ -1,9 +1,42 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { DeleteIcon } from "@chakra-ui/icons"
-import { Avatar, Box, Button, Card, CardBody, CardFooter, CardHeader, Container, Divider, Flex, Heading, Icon, Image, Stack, Text, Textarea, VStack, Wrap, WrapItem } from "@chakra-ui/react"
+import { 
+  Avatar, 
+  Box, 
+  Button, 
+  Card, 
+  CardBody, 
+  CardFooter, 
+  CardHeader,
+  Container, 
+  Divider, 
+  Flex, 
+  Heading, 
+  Icon, 
+  Image, 
+  Stack, 
+  Text, 
+  Textarea, 
+  VStack,
+  Wrap, 
+  WrapItem,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  FormControl,
+  FormLabel,
+  Input,
+  Checkbox, CheckboxGroup,
+  useDisclosure, } from "@chakra-ui/react"
+import { useRef } from "react"
 import { useEffect, useState } from "react"
-import { MdFlag, MdSave, MdSend } from "react-icons/md"
+import { MdFlag, MdSave, MdSend, MdStar } from "react-icons/md"
 import { Link, useParams } from "react-router-dom"
+import { handleSuccess } from "../../component/SweetAlert"
 import { useJwt } from "../../jwt/jwt"
 import { BlogAuthor, BlogTags } from "../BlogList"
 
@@ -11,6 +44,12 @@ import { BlogAuthor, BlogTags } from "../BlogList"
 const BlogDetail = () => {
   const [data, setData] = useState({})
   const {id} = useParams()
+  const date = new Date(data.createdAt)
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const initialRef = useRef(null)
+  const finalRef = useRef(null)
+  const textareaRef = useRef()
+  const [reasons, setReasons] = useState([])
 
   const  fetchData = async () => {
     try {
@@ -27,28 +66,111 @@ const BlogDetail = () => {
     fetchData()
   }, [])
 
-  const date = new Date(data.createdAt)
+  const handleReport = async () => {
+    console.log(textareaRef.current.value)
+    console.log(reasons)
+    console.log(useJwt().jwt.getUserData().primarysid)
+    try {
+      const response = await useJwt().jwt.postReport({
+        userId: useJwt().jwt.getUserData().primarysid,
+        blogId: data.id,
+        reason: reasons.toString(),
+        content: textareaRef.current.value
+      }) 
+      console.log(response)
+      onClose()
+      handleSuccess("Báo cáo thành công", () => {
+      })
+    } catch (error) {
+      console.log(error)
+      
+    }
+  }
   return (
     <Container maxW={"7xl"} p="10">
+      <Modal
+        initialFocusRef={initialRef}
+        finalFocusRef={finalRef}
+        isOpen={isOpen}
+        onClose={onClose}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>
+            <Flex align={"center"}>
+              <Icon as={MdFlag} w="6" h="6" color={"red"}/>
+              <Text marginStart={"12px"}>Báo cáo bài viết</Text>
+            </Flex>
+          </ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            <Text marginBottom={"5px"} fontWeight={"medium"}>Nguyên nhân</Text>
+            <CheckboxGroup colorScheme='green' defaultValue={reasons} onChange={(value) => setReasons(value)}>
+              <Stack spacing={[1, 5]} direction={['row', 'column']}>
+                <Checkbox value='Nội dung khiêu dâm'>Nội dung khiêu dâm</Checkbox>
+                <Checkbox value='Nội dung bạo lực phản cảm'>Nội dung bạo lực phản cảm</Checkbox>
+                <Checkbox value='Nội dung lăng mạ hoặc kích động gây thù hận'>Nội dung lăng mạ hoặc kích động gây thù hận</Checkbox>
+                <Checkbox value='Vi phạm bản quyền của tôi'>Vi phạm bản quyền của tôi</Checkbox>
+                <Checkbox value='Nội dung không đúng sự thật'>Nội dung không đúng sự thật</Checkbox>
+                <Checkbox value='Khác'>Khác</Checkbox>
+              </Stack>
+            </CheckboxGroup>
+            <FormControl marginTop={"12px"}>
+              <FormLabel>Nội dung báo cáo</FormLabel>
+              <Textarea placeholder='' ref={textareaRef}/>
+            </FormControl>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme='red' mr={3} onClick={handleReport}>
+              Gửi báo cáo
+            </Button>
+            <Button onClick={onClose}>Trở lại</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       <VStack paddingTop="40px" spacing="2" alignItems="flex-start">
-        <Heading as="h2">{data.header}</Heading>
         <Card width={"100%"}>
           <CardHeader>
-            <Button 
-              leftIcon={<Icon as={MdFlag} w="4" h="4"/>} 
-              variant="outline"
-              color={"black"}
-              // onClick={() => navigate('/')}
-              _hover={{bg: "black", color: "white"}}
-              _active={{bg: "transparent", color: "black"}}>
-                {/* <Link to={"/"}> */}
-                  <Text fontSize={"sm"}>
-                      Báo cáo vi phạm
-                  </Text>
-                {/* </Link> */}
-            </Button>
+            <Flex justify={"space-between"}>
+              <Button 
+                leftIcon={<Icon as={MdFlag} w="4" h="4" color={"red"}/>} 
+                variant="outline"
+                color={"black"}
+                onClick={onOpen}
+                _hover={{bg: "black", color: "white"}}
+                _active={{bg: "transparent", color: "black"}}>
+                <Text fontSize={"sm"}>
+                    Báo cáo vi phạm
+                </Text>
+              </Button>
+              <Box
+                display={"flex"}
+                alignItems={"center"}
+                marginTop="12px"
+              >
+                {
+                  (data.totalFollower > 1) && (
+                    <Text color={"yellow.800"}>{data.totalFollower}</Text>
+                  )
+                }
+                {
+                  (data.totalFollower > 0) && (
+                    <Icon as={MdStar} w="7" h="7" color={"yellow.700"} />
+                  )
+                }
+                {
+                  (data.totalFollower <= 0) && (
+                    <Text color={"yellow.800"}>Chưa đánh giá</Text>
+                  )
+                }
+              </Box>
+              
+            </Flex>
           </CardHeader>
+          <Divider/>
           <CardBody>
+            <Heading as="h2" marginBottom={"20px"}>{data.header}</Heading>
+
             <Box
               dangerouslySetInnerHTML={{__html: data.content}}
             >
@@ -156,22 +278,6 @@ const BlogDetail = () => {
                   </Box>
                 </CardBody>
               </Card>
-              {/* <Card width={"100%"} bg="gray.50" marginTop={"12px"}>
-                <CardBody >
-                  <Box>
-                    <Flex justify={"start"} align="center" >
-                      <Avatar name='Dan Abrahmov' src='https://bit.ly/dan-abramov' />
-                      <Stack paddingStart={"12px"}>
-                        <Heading fontSize={"md"}>Nguyễn Văn A</Heading>
-                        <Text textAlign={"justify"}>
-                          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-                          condimentum quam arcu, eu tempus tortor molestie at. Vestibulum
-                        </Text>
-                      </Stack>
-                    </Flex>
-                  </Box>
-                </CardBody>
-              </Card> */}
             </Flex>
           </CardFooter>
         </Card>

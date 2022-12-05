@@ -9,9 +9,14 @@ export default {
 
   registerEndPoint: "/api/Identity/signup",
   loginEndPoint: "/api/Identity/login",
-
+  indentityEndPoint: "/api/Identity",
+  
   getArticlesEndPoint: (params) => `/api/Blogs/?${params.tagIds}page=${params.page}&pageSize=${params.pageSize}`,
   getArticleWithIDEndPoint: (params) => `/api/Blogs/${params.id}`,
 
   getTagsEndPoint: () => `/api/Tags`,
+  
+  postReportEndPoint: `/api/Reports`
+
+  // sendReport: (params) => ``
 }

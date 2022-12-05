@@ -43,6 +43,14 @@ export default class JwtService {
     localStorage.setItem(this.jwtConfig.storageTokenKeyName, value)
   }
 
+  setUserData(value) {
+    localStorage.setItem("userData", JSON.stringify(value))
+  }
+
+  getUserData() {
+    return JSON.parse(localStorage.getItem("userData"))
+  }
+
   async getDataAssets(limit) {
     return axios({
       method: 'get',
@@ -64,6 +72,13 @@ export default class JwtService {
         username: params.username,
         password: params.password
       })
+    })
+  }
+
+  async indentity() {
+    return axios({
+      method: "get",
+      url: this.jwtConfig.indentityEndPoint
     })
   }
 
@@ -103,6 +118,22 @@ export default class JwtService {
     return axios({
       method: "get",
       url: this.jwtConfig.getTagsEndPoint()
+    })
+  }
+
+  async postReport(params) {
+    return axios({
+      method: "post",
+      url: this.jwtConfig.postReportEndPoint,
+      headers: {
+        "account-id": params.userId,
+        "Content-Type": "application/json"
+      },
+      data: JSON.stringify({
+        blogId: params.blogId,
+        reason: params.reason,
+        content: params.content
+      })
     })
   }
 }

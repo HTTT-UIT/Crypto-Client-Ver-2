@@ -27,6 +27,16 @@ import { MdArrowBack, MdBackpack } from "react-icons/md";
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
 
+function parseJwt (token) {
+  var base64Url = token.split('.')[1];
+  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
+
+  return JSON.parse(jsonPayload);
+}
+
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState("")
@@ -55,6 +65,7 @@ const LoginPage = () => {
   
       // eslint-disable-next-line react-hooks/rules-of-hooks
       useJwt().jwt.setToken(response.data.token)
+      useJwt().jwt.setUserData(parseJwt(response.data.token))
       handleSuccess("Đăng nhập thành công", () => {
         window.location.href = "/"
       })
@@ -76,11 +87,9 @@ const LoginPage = () => {
         _hover={{bg: "white", color: "teal.500"}}
         onClick={() => window.location.href = "/"}
         _active={{bg: "transparent"}}>
-          {/* <Link to={"/"}> */}
-            <Text fontSize={"sm"}>
-                TRỞ VỀ
-            </Text>
-          {/* </Link> */}
+        <Text fontSize={"sm"}>
+            TRỞ VỀ
+        </Text>
       </Button>
       <Flex
         flexDirection="column"
