@@ -97,7 +97,7 @@ export default class JwtService {
   }
 
   signOut () {
-    localStorage.removeItem(this.jwtConfig.storageTokenKeyName)
+    localStorage.clear()
   }
   
   async getArticles (params) {
@@ -134,6 +134,59 @@ export default class JwtService {
         reason: params.reason,
         content: params.content
       })
+    })
+  }
+
+  async postFollowReport(params) {
+    return axios({
+      method: "post",
+      url: this.jwtConfig.postFollowEndPoint,
+      headers: {
+        "account-id": params.userId,
+        "Content-Type": "application/json"
+      },
+      data: JSON.stringify({
+        userId: params.userId,
+        blogId: params.blogId,
+      })
+    })
+  }
+
+  async postCommentReport(params) {
+    return axios({
+      method: "post",
+      url: this.jwtConfig.postCommentEndPoint(params),
+      headers: {
+        "account-id": params.userId,
+        "Content-Type": "application/json"
+      },
+      data: JSON.stringify({
+        content: params.content,
+      })
+    })
+  }
+
+  async getComment(params) {
+    return axios({
+      method: "get",
+      url: this.jwtConfig.getCommentEndPoint(params)
+    })
+  }
+
+  async deleteComment(params) {
+    return axios({
+      method: "delete",
+      url: this.jwtConfig.deleteCommentEndPoint(params),
+      headers: {
+        "account-id": params.userId,
+      },
+    })
+  }
+
+  async getUser(params) {
+    return axios({
+      method: "get",
+      url: this.jwtConfig.getUserEndPoint(params)
     })
   }
 }

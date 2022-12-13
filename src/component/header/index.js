@@ -34,6 +34,7 @@ const Header = (props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const handleToggle = () => (isOpen ? onClose() : onOpen());
   const navigate = useNavigate()
+  
   const handleSignOut = () => {
     useJwt().jwt.signOut()
     window.location.reload()

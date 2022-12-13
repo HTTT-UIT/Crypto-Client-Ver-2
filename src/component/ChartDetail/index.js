@@ -7,7 +7,7 @@ const changeUSD = (money) => {
     style: 'currency',
     currency: 'USD',
   });
-  return formatter.format(Number.parseFloat(money).toFixed(2))
+  return formatter.format(Number.parseFloat(money).toFixed(0))
 }
 
 const ChartDetail = ({item, filter}) => {
@@ -123,13 +123,30 @@ const ChartDetail = ({item, filter}) => {
     data,
     xField: 'date',
     yField: 'priceUsd',
+    meta: {
+      y: {
+        tick: (value, index) => index
+      }
+    },
     xAxis: {
       range: [0, 1],
       tickCount: 10,
+
     },
     yAxis: {
       range: [0, 1],
-      tickCount: 20
+      tickCount: 20,
+      label: {
+        autoHide: true,
+        formatter: (v) => changeUSD(v),
+      
+      },
+    },
+    // forceFit: true,
+    tooltip: {
+      formatter: (datum) => {
+        return { name: "Giá", value: changeUSD(datum.priceUsd)};
+      },
     },
     areaStyle: () => {
       return {

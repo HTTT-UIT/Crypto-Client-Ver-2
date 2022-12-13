@@ -50,3 +50,16 @@ export const handleWarning = (title, text) => {
     confirmButtonText: "Trở lại"
   })
 }
+
+export const handleQuestion = (title, text, callback) => {
+  MySwal.fire({
+    icon: 'question',
+    title,
+    html: text,
+    confirmButtonText: "Đồng ý",
+    showCancelButton: true,
+    cancelButtonText: "Trở lại"
+  }).then(res => {
+    callback(res)
+  })
+}

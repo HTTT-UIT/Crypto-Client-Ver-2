@@ -16,7 +16,13 @@ export default {
 
   getTagsEndPoint: () => `/api/Tags`,
   
-  postReportEndPoint: `/api/Reports`
+  postReportEndPoint: `/api/Reports`,
+  postFollowEndPoint: `/api/Blogs/Follow`,
+  postCommentEndPoint: (params) => `/api/Blog/${params.blogId}/Comment`,
+  getCommentEndPoint: (params) => `/api/Blog/${params.blogId}/Comment`,
+  deleteCommentEndPoint: (params) => `/api/Blog/${params.blogId}/Comment/${params.commentId}`,
+
+  getUserEndPoint: (params) => `/api/Users/${params.userId}`,
 
   // sendReport: (params) => ``
 }

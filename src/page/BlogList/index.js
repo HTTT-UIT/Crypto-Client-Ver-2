@@ -43,11 +43,15 @@ export const BlogTags = (props) => {
 
 export const BlogAuthor = (props) => {
   return (
-    <HStack marginTop="2" spacing="2" display="flex" alignItems="center">
+    <HStack position={"absolute"} bottom="10px" marginTop="2" spacing="2" display="flex" alignItems="center">
       <Image
+        borderStyle={"dashed"}
+        borderWidth={"2px"}
+        borderColor={"gray"}
         borderRadius="full"
         boxSize="40px"
-        src="https://100k-faces.glitch.me/random-image"
+        objectFit={"cover"}
+        src={(props.image !== undefined && props.image !== null && props.image !== "") ? props.image : "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Faenza-avatar-default-symbolic.svg/1024px-Faenza-avatar-default-symbolic.svg.png"} 
         alt={`Avatar of ${props.name}`}
       />
       <Text fontWeight="medium">{props.name}</Text>
@@ -61,7 +65,7 @@ const ArticleList = () => {
   const [data, setData] = useState(null)
   const [dataItems, setDataItems] = useState([])
   const [page, setPage] = useState(1)
-  const [pageSize, setPageSize] = useState(2)
+  const [pageSize, setPageSize] = useState(3)
   const [tagIds, setTagIds] = useState("")
   const [options, setOptions] = useState([])
   const [checkSpinner, setCheckSpinner] = useState(false)
@@ -74,9 +78,8 @@ const ArticleList = () => {
       console.log(optionsResponse)
       setDataItems(response.data.items)
       setData(response.data)
-      setOptions(optionsResponse.data.items)
+      setOptions([{id: -1 , title: "Tất cả"}, ...optionsResponse.data.items])
     } catch (error) {
-      
     }
   }
 
@@ -94,10 +97,14 @@ const ArticleList = () => {
         pageSize,
         tagIds
       })
-    }, 2000)
+    }, 0)
   }, [page, pageSize, tagIds])
 
   const navigate = useNavigate()
+
+  useEffect(() => {
+    setPageSize(3)
+  }, [navigate])
   return (
     <Container maxW={'7xl'} p="12">
       <Box
@@ -117,7 +124,7 @@ const ArticleList = () => {
         right={"150px"}
         top={"124px"}
         display={"flex"}
-        zIndex={"999"}
+        // zIndex={"999"}
         justifyContent={"right"}>
           <Box
             maxW={"200px"} 
@@ -129,6 +136,7 @@ const ArticleList = () => {
       {
         (dataItems.length > 0) && (
         <Box
+          position={"relative"}
           marginTop={{ base: '1', sm: '5' }}
           display="flex"
           flexDirection={{ base: 'column', sm: 'row' }}
@@ -148,11 +156,11 @@ const ArticleList = () => {
                 <Image
                   borderRadius="lg"
                   src={
-                    'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80'
+                    (dataItems[0].imageUrl !== undefined && dataItems[0].imageUrl !== null && dataItems[0].imageUrl !== "") ? dataItems[0].imageUrl : 'https://guwahatiplus.com/public/web/images/default-news.png'
                   }
                   alt="some good alt text"
                   objectFit="contain"
-                  onClick={() =>  window.location.href = (`/blog/${ dataItems[0].id}`)}
+                  onClick={() =>  navigate(`/blog/${ dataItems[0].id}`)}
                 />
               </Link>
             </Box>
@@ -202,7 +210,7 @@ const ArticleList = () => {
                 <Link 
                   textDecoration="none" 
                   _hover={{ textDecoration: 'none' }}
-                  onClick={() =>  window.location.href = (`/blog/${ dataItems[0].id}`)}>
+                  onClick={() =>  navigate(`/blog/${ dataItems[0].id}`)}>
                   {
                     dataItems[0]['header']
                   }
@@ -215,15 +223,11 @@ const ArticleList = () => {
               fontSize="lg"
               dangerouslySetInnerHTML={{__html: dataItems[0]["content"]}}>
             </Box>
-            <BlogAuthor name={dataItems[0]["authorName"]} date={new Date(dataItems[0]["createdAt"])} />
+            <BlogAuthor image={dataItems[0]["authorImageUrl"]} name={dataItems[0]["authorName"]} date={new Date(dataItems[0]["createdAt"])} />
           </Box>
         </Box>
         )
       }
-     
-      {/* <Heading as="h2" marginTop="5" fontSize="2xl">
-        Latest articles
-      </Heading> */}
       <Divider marginTop="5" />
       <Wrap spacing="40px" marginTop="5" justify={"center"}>
         {
@@ -231,16 +235,24 @@ const ArticleList = () => {
             if (index > 0) {
               return (
                 <WrapItem width={{ base: '100%', sm: '45%', md: '45%', lg: '30%' }} key={index}>
-                  <Box w="100%">
+                  <Box 
+                    w="100%" 
+                    h={"500px"}
+                    position={"relative"}
+                    padding={"10px"}
+                    borderRadius={"10px"}
+                    borderStyle={"dotted"}
+                    borderWidth={"2px"}>
                     <Box borderRadius="lg" overflow="hidden">
                       <Link 
                         textDecoration="none" 
                         _hover={{ textDecoration: 'none' }}
-                        onClick={() =>  window.location.href = (`/blog/${item.id}`)}>
+                        onClick={() =>  navigate(`/blog/${item.id}`)}>
                         <Image
                           transform="scale(1.0)"
                           src={
-                            'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80'
+                              (item.imageUrl !== undefined && item.imageUrl !== null && item.imageUrl !== "") ? item.imageUrl : 'https://guwahatiplus.com/public/web/images/default-news.png'
+
                           }
                           alt="some text"
                           objectFit="contain"
@@ -278,17 +290,18 @@ const ArticleList = () => {
                       <Link 
                         textDecoration="none" 
                         _hover={{ textDecoration: 'none' }}
-                        onClick={() => window.location.href = (`/blog/${item.id}`)}>
+                        onClick={() => navigate(`/blog/${item.id}`)}>
                         {item.header}
                       </Link>
                     </Heading>
-                    <Box 
+                    <Box
                       textAlign={"justify"} 
                       fontSize="md" 
                       marginTop="2" 
                       dangerouslySetInnerHTML={{__html: item.content}}>
                     </Box>
                     <BlogAuthor
+                      image={item.authorImageUrl}
                       name={item.authorName}
                       date={new Date(item.createdAt)}
                     />
@@ -329,33 +342,6 @@ const ArticleList = () => {
           </Box>
         ) 
       }
-      {/* <VStack paddingTop="40px" spacing="2" alignItems="flex-start">
-        <Heading as="h2">What we write about</Heading>
-        <Text as="p" fontSize="lg">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-          condimentum quam arcu, eu tempus tortor molestie at. Vestibulum
-          pretium condimentum dignissim. Vestibulum ultrices vitae nisi sed
-          imperdiet. Mauris quis erat consequat, commodo massa quis, feugiat
-          sapien. Suspendisse placerat vulputate posuere. Curabitur neque
-          tortor, mattis nec lacus non, placerat congue elit.
-        </Text>
-        <Text as="p" fontSize="lg">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-          condimentum quam arcu, eu tempus tortor molestie at. Vestibulum
-          pretium condimentum dignissim. Vestibulum ultrices vitae nisi sed
-          imperdiet. Mauris quis erat consequat, commodo massa quis, feugiat
-          sapien. Suspendisse placerat vulputate posuere. Curabitur neque
-          tortor, mattis nec lacus non, placerat congue elit.
-        </Text>
-        <Text as="p" fontSize="lg">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-          condimentum quam arcu, eu tempus tortor molestie at. Vestibulum
-          pretium condimentum dignissim. Vestibulum ultrices vitae nisi sed
-          imperdiet. Mauris quis erat consequat, commodo massa quis, feugiat
-          sapien. Suspendisse placerat vulputate posuere. Curabitur neque
-          tortor, mattis nec lacus non, placerat congue elit.
-        </Text>
-      </VStack> */}
     </Container>
   );
 };

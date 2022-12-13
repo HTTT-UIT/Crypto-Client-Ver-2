@@ -76,7 +76,7 @@ const TableCS = ({data}) => {
   return (
     <>
       {isOpen && (
-        <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose} size="6xl">
+        <Modal closeOnOverlayClick={true} isOpen={isOpen} onClose={onClose} size="6xl">
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>
@@ -90,7 +90,6 @@ const TableCS = ({data}) => {
                       }
                     </Text>
                   </Box>
-
                 </Flex>
               </Box>
             </ModalHeader>

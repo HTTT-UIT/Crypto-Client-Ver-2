@@ -2,9 +2,10 @@ import { MultiSelect } from 'chakra-multiselect'
 import { useState, useEffect } from 'react'
 
 const MultiSelecCS = ({onChange, title, options}) => {
-  const [value, setValue] = useState([])
+  const [value, setValue] = useState(["Tất cả"])
 
   useEffect(() => {
+    let checkAll = false
     const optionsF = options.filter(item => {
       let check = false
       value.forEach(v => {
@@ -12,11 +13,16 @@ const MultiSelecCS = ({onChange, title, options}) => {
         if (v === item.title){
           check = true
         }
+        if (v === "Tất cả")
+         checkAll = true
       })
       return check
     })
-    onChange(optionsF.map(item => item.id))
 
+    if (!checkAll)
+      onChange(optionsF.map(item => item.id))
+    else
+      onChange([])
   }, [value])
 
   return (
@@ -25,9 +31,8 @@ const MultiSelecCS = ({onChange, title, options}) => {
       value={value}
       label={title}
       onChange={setValue}
-      zIndex={"999"}
       bg={"white"}
-      bgColor={"white"}
+      bgColor={"black"}
     />
   )
 }
