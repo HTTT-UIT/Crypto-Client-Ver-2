@@ -63,7 +63,7 @@ export default function UserCard({image, brand, name, role}) {
             {name}
           </Heading>
           <Stack direction={'row'} align={'center'}>
-            <Text fontWeight={800} fontSize={'lg'}>
+            <Text fontWeight={750} fontSize={'lg'}>
               {role}
             </Text>
           </Stack>

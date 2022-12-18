@@ -67,7 +67,7 @@ const Header = (props) => {
       pos={"fixed"}
       padding={3}
       w="full"
-      bg="#4950c0"
+      bg="#d9a15f"
       color="white"
       zIndex={999}
       {...props}
@@ -182,8 +182,8 @@ const Header = (props) => {
             <Menu>
               <MenuButton me="4">
                   <Flex>
-                    <Text m={2}>{(data !== null && data.name !== undefined && data.name !== null) ? data.name : ''}</Text>
-                    <Avatar src= { (data !== null && data.profileImageUrl !== undefined && data.profileImageUrl !== null) ? data.profileImageUrl : 'https://bit.ly/dan-abramov'}>
+                    <Text border={"solid"} borderColor="black" p="1px 7px 1px 7px" textColor={"black"} fontSize="md" fontWeight={"700"} m={2}>{(data !== null && data.name !== undefined && data.name !== null) ? data.name : ''}</Text>
+                    <Avatar boxShadow={"xl"} src= { (data !== null && data.profileImageUrl !== undefined && data.profileImageUrl !== null) ? data.profileImageUrl : 'https://bit.ly/dan-abramov'}>
                       <AvatarBadge boxSize='1.25em' bg='green.500'/>
                     </Avatar>
                   </Flex>
