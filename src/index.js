@@ -4,7 +4,7 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import { extendTheme , ChakraProvider } from '@chakra-ui/react';
 import {createBrowserRouter, HashRouter, Outlet, RouterProvider } from 'react-router-dom'
-import Header from './component/header';
+// import Header from './component/header';
 import Layout from './page/layout';
 import HomePage from './page/HomePage';
 import LoginPage from './page/LoginPage';
@@ -13,7 +13,12 @@ import ArticleList from './page/BlogList';
 import NotFound from './page/ErrorPage';
 import BlogDetail from './page/BlogDetail';
 import {  MultiSelectTheme } from 'chakra-multiselect'
-                      
+// import MyAccout from './page/MyAccout';
+import UserProfileEdit from './page/MyAccout';
+import MyArticle from './page/MyArticle';
+import AboutPage from './page/About';
+
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const router = createBrowserRouter([
@@ -33,6 +38,18 @@ const router = createBrowserRouter([
       {
         path: "/blog/:id",
         element: <BlogDetail />,
+      },
+      {
+        path: "/my-account",
+        element: <UserProfileEdit />,
+      },
+      {
+        path: "/my-article",
+        element: <MyArticle />,
+      },
+      {
+        path: "/about",
+        element: <AboutPage />,
       },
     ],
     

@@ -61,6 +61,7 @@ export default class JwtService {
     })
   }
 
+  // auth
   async login(params) {
     return axios({
       method: "post",
@@ -100,6 +101,7 @@ export default class JwtService {
     localStorage.clear()
   }
   
+  // Article
   async getArticles (params) {
     return axios({
       method: "get",
@@ -183,10 +185,42 @@ export default class JwtService {
     })
   }
 
+  // User
   async getUser(params) {
     return axios({
       method: "get",
       url: this.jwtConfig.getUserEndPoint(params)
+    })
+  }
+
+  
+  async updateUser(params) {
+    return axios({
+      method: "put",
+      url: this.jwtConfig.updateUserEndPoint,
+      headers: {
+        'Content-Type': 'application/json',
+        "account-id": params.userId,
+      },
+      data: JSON.stringify({
+        ...params
+      })
+    })
+  }
+
+  async updateUserAvatar(params) {
+    let formData = new FormData()
+    formData.append("id", params.userId)
+    formData.append("image", params.image)
+
+    return axios({
+      method: "put",
+      url: this.jwtConfig.updateUserAvatarEndPoint,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        "account-id": params.userId,
+      },
+      data: formData
     })
   }
 }

@@ -95,7 +95,9 @@ const ArticleList = () => {
       fetchData({
         page,
         pageSize,
-        tagIds
+        tagIds,
+        followerId: '',
+        authorId: '',
       })
     }, 0)
   }, [page, pageSize, tagIds])
@@ -113,7 +115,7 @@ const ArticleList = () => {
         <Heading as="h1" fontSize="2xl">DANH MỤC BÀI VIẾT</Heading>
         {
           checkSpinner && (
-            <Spinner marginStart={"12px"} />
+            <Spinner marginStart={"15px"} />
           )
         }
 
@@ -128,6 +130,7 @@ const ArticleList = () => {
         justifyContent={"right"}>
           <Box
             maxW={"200px"} 
+            mt="20px"
           >
             <MultiSelecCS onChange={(value) => handleFilter(value)} title={"Thể loại"} options={options} />
           </Box>
@@ -228,7 +231,7 @@ const ArticleList = () => {
         </Box>
         )
       }
-      <Divider marginTop="5" />
+      <Divider marginTop="50px" />
       <Wrap spacing="40px" marginTop="5" justify={"center"}>
         {
           dataItems.map((item, index) => {
@@ -315,7 +318,7 @@ const ArticleList = () => {
       </Wrap>
       <Divider marginTop="5" />
       {
-        (data === null || (data !== null && data.pageSize < data.totalRow)) && (
+        ((data !== null && data.pageSize < data.totalRow)) && (
           <Box>
             <Flex justify={"center"}>
               <Button

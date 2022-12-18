@@ -377,8 +377,8 @@ const BlogDetail = () => {
                         <Divider marginTop="14px" marginBottom="14px"/>
                         <Flex justify="space-between" align="center">
                           <Flex justify={"start"} align="center" width="100%">
-                            <Avatar name='Dan Abrahmov' src='https://bit.ly/dan-abramov' />
-                            <Heading fontSize={"md"} paddingStart="12px">{item.username}</Heading>
+                            <Avatar name={(item.username !== null && item.username !== "") ? item.username : "--"} src= {(item.profileImageUrl !== null && item.profileImageUrl !== "") ? item.profileImageUrl : 'https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_1280.png'} />
+                            <Heading fontSize={"md"} paddingStart="12px">{(item.username !== null && item.username !== "") ? item.username : "Vô danh"}</Heading>
                           </Flex>
                           {
                             (item.userId === userId || data.authorId === userId) && (

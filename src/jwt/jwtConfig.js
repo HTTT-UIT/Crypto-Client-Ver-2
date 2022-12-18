@@ -7,22 +7,23 @@ export default {
 
   coinAssetsEndPoint: (limit) => `https://api.coincap.io/v2/assets?limit=${limit}`,
 
+  // Auth
   registerEndPoint: "/api/Identity/signup",
   loginEndPoint: "/api/Identity/login",
   indentityEndPoint: "/api/Identity",
-  
-  getArticlesEndPoint: (params) => `/api/Blogs/?${params.tagIds}page=${params.page}&pageSize=${params.pageSize}`,
+  // Article
+  getArticlesEndPoint: (params) => `/api/Blogs/?${params.tagIds}page=${params.page}&pageSize=${params.pageSize}&followerId=${params.followerId}&authorId=${params.authorId}`,
   getArticleWithIDEndPoint: (params) => `/api/Blogs/${params.id}`,
-
   getTagsEndPoint: () => `/api/Tags`,
-  
   postReportEndPoint: `/api/Reports`,
   postFollowEndPoint: `/api/Blogs/Follow`,
   postCommentEndPoint: (params) => `/api/Blog/${params.blogId}/Comment`,
   getCommentEndPoint: (params) => `/api/Blog/${params.blogId}/Comment`,
   deleteCommentEndPoint: (params) => `/api/Blog/${params.blogId}/Comment/${params.commentId}`,
-
+  // User
   getUserEndPoint: (params) => `/api/Users/${params.userId}`,
-
+  updateUserEndPoint: `/api/Users`,
+  updateUserAvatarEndPoint: `/api/Users/avatar`,
+  
   // sendReport: (params) => ``
 }

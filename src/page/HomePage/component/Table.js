@@ -1,3 +1,4 @@
+import { BellIcon, CloseIcon } from '@chakra-ui/icons';
 import {
   Table,
   Thead,
@@ -81,15 +82,20 @@ const TableCS = ({data}) => {
           <ModalContent>
             <ModalHeader>
               <Box>
-                <Flex justify={"left"} alignItems="center">
-                  <Avatar width={12} height={12} name='' src={`https://assets.coincap.io/assets/icons/${dataChoose.symbol.toLowerCase()}@2x.png`} />
-                  <Box>
-                    <Text fontSize={"lg"} fontWeight={500} marginStart="7px">
-                      {
-                        dataChoose.name 
-                      }
-                    </Text>
-                  </Box>
+                <Flex justify={"space-between"} alignItems="center">
+                  <Flex justify={"left"} alignItems="center">
+                    <Avatar width={12} height={12} name='' src={`https://assets.coincap.io/assets/icons/${dataChoose.symbol.toLowerCase()}@2x.png`} />
+                    <Box>
+                      <Text fontSize={"lg"} fontWeight={500} marginStart="7px">
+                        {
+                          dataChoose.name 
+                        }
+                      </Text>
+                    </Box>
+                  </Flex>
+                  <Flex justify={"left"} alignItems="center">
+                    <CloseIcon cursor={"pointer"} w={4} h={4} color="red.700" onClick={onClose}/>
+                  </Flex>
                 </Flex>
               </Box>
             </ModalHeader>
@@ -107,10 +113,10 @@ const TableCS = ({data}) => {
             </ModalBody>
 
             <ModalFooter>
-              {/* <Button colorScheme='blue' mr={3}>
-                Save
-              </Button> */}
-              <Button onClick={onClose}>Trở lại</Button>
+              <Flex>
+                <Button leftIcon={<BellIcon h={5} w={5} color={"orange.600"}/>} marginRight="12px" color={"orange.600"} onClick={onClose}>Theo dõi</Button>
+                <Button onClick={onClose}>Trở lại</Button>
+              </Flex>
             </ModalFooter>
           </ModalContent>
         </Modal>

@@ -27,14 +27,15 @@ const Layout = () => {
   return (
     <>
       <Header/>
-      <div>
+      <Box pt={20}>
         <Outlet/>
-      </div>
+      </Box>
       <div style={{
         position: 'fixed',
         display: 'block',
         bottom: "24px",
-        right: "24px"
+        right: "24px",
+        zIndex: "999"
       }}>
         <Popover
           initialFocusRef={initialFocusRef}

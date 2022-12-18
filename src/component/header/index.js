@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Stack,
@@ -19,7 +19,7 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
-import { MdAccountCircle, MdArticle, MdBookmark, MdHomeFilled, MdManageAccounts, MdMoney } from 'react-icons/md'
+import { MdAccountCircle, MdArticle, MdBookmark, MdHomeFilled, MdManageAccounts, MdMoney, MdPageview } from 'react-icons/md'
 import { TbPlugOff } from 'react-icons/tb'
 import {Link, useNavigate} from "react-router-dom"
 import { useJwt } from "../../jwt/jwt";
@@ -34,20 +34,42 @@ const Header = (props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const handleToggle = () => (isOpen ? onClose() : onOpen());
   const navigate = useNavigate()
+  const [data, setData] = useState(null)
+  const userId = useJwt().jwt.getUserData().primarysid
   
   const handleSignOut = () => {
     useJwt().jwt.signOut()
     window.location.reload()
   }
+
+  const fetchData = async () => {
+    // setIsLoading(true)
+    if (userId !== undefined && userId !== null) {
+      const response = await useJwt().jwt.getUser({
+        userId
+      })
+      setData(response.data)
+    }
+    // setIsLoading(false)
+  }
+
+  useEffect(() => {
+    fetchData()
+    console.log(window.location.pathname)
+  }, [navigate])
+
   return (
     <Flex
       as="nav"
       align="center"
       justify="space-between"
       wrap="wrap"
-      padding={6}
-      bg="teal.500"
+      pos={"fixed"}
+      padding={3}
+      w="full"
+      bg="#4950c0"
       color="white"
+      zIndex={999}
       {...props}
     >
       <Flex align="center" mr={5}>
@@ -75,6 +97,7 @@ const Header = (props) => {
           leftIcon={<Icon as={MdHomeFilled} w="4" h="4"/>} 
           variant="outline"
           color={"white"}
+          bg={(window.location.pathname === "/") ? "black" : "transparent"}
           onClick={() => navigate('/')}
           _hover={{bg: "black"}}
           _active={{bg: "transparent"}}>
@@ -88,12 +111,27 @@ const Header = (props) => {
           variant="outline"
           leftIcon={<Icon as={MdArticle} w="4" h="4"/>}
           color={"white"}
+          bg={(window.location.pathname === "/blog") ? "black" : "transparent"}
           onClick={() => navigate('/blog')}
           _hover={{bg: "black"}}
           _active={{bg: "transparent"}}>
             {/* <Link to={"/blog"}> */}
               <Text fontSize={"sm"}>
                   BÀI VIẾT
+              </Text>
+            {/* </Link> */}
+        </Button>
+        <Button
+          variant="outline"
+          leftIcon={<Icon as={MdBookmark} w="4" h="4"/>}
+          color={"white"}
+          onClick={() => navigate('/about')}
+          bg={(window.location.pathname === "/about") ? "black" : "transparent"}
+          _hover={{bg: "black"}}
+          _active={{bg: "transparent"}}>
+            {/* <Link to={"/blog"}> */}
+              <Text fontSize={"sm"}>
+                  GIỚI THIỆU
               </Text>
             {/* </Link> */}
         </Button>
@@ -142,15 +180,18 @@ const Header = (props) => {
         (useJwt().jwt.getToken() !== undefined && useJwt().jwt.getToken() !== null) && (
           <Stack direction='row' spacing={4} marginStart={12}>
             <Menu>
-              <MenuButton>
-                <Avatar src='https://bit.ly/dan-abramov'>
-                <AvatarBadge boxSize='1.25em' bg='green.500'/>
-              </Avatar>
+              <MenuButton me="4">
+                  <Flex>
+                    <Text m={2}>{(data !== null && data.name !== undefined && data.name !== null) ? data.name : ''}</Text>
+                    <Avatar src= { (data !== null && data.profileImageUrl !== undefined && data.profileImageUrl !== null) ? data.profileImageUrl : 'https://bit.ly/dan-abramov'}>
+                      <AvatarBadge boxSize='1.25em' bg='green.500'/>
+                    </Avatar>
+                  </Flex>
               </MenuButton>
               <MenuList textColor="black">
                 <MenuGroup title='Cá nhân'>
-                  <MenuItem icon={<Icon as={MdAccountCircle} w={6} h={6} color="green"/>}>Tài khoản của bạn</MenuItem>
-                  <MenuItem icon={<Icon as={MdBookmark} w={6} h={6} color="black"/>}>Bài viết yêu thích</MenuItem>
+                  <MenuItem icon={<Icon as={MdAccountCircle} w={6} h={6} color="green"/>} onClick={() => navigate('/my-account')}>Hồ sơ của bạn</MenuItem>
+                  <MenuItem icon={<Icon as={MdBookmark} w={6} h={6} color="black"/>} onClick={() => navigate('/my-article')}>Bài viết yêu thích</MenuItem>
                   <MenuItem icon={<Icon as={MdMoney} w={6} h={6} color="orange"/>}>Tiền ảo yêu thích</MenuItem>
                 </MenuGroup>
                 <MenuDivider />
