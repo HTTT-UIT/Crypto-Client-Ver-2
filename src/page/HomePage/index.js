@@ -10,7 +10,7 @@ const HomePage = () => {
   const [assets, setAssets] = useState([])
   const [limit, setLimit] = useState(100)
   const timeRef = useRef()
-  const timeInteval = useRef(4000)
+  const timeInteval = useRef(20000)
   const check = useRef(true)
   useEffect(() => {
     timeInteval.current += 500

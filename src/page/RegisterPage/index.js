@@ -73,9 +73,9 @@ const RegisterPage = () => {
     <Button 
         leftIcon={<Icon as={MdArrowBack} w="4" h="4"/>} 
         margin={"12px"}
-        bg={"teal.500"}
+        bg={"black"}
         color={"white"}
-        _hover={{bg: "white", color: "teal.500"}}
+        _hover={{bg: "white", color: "black"}}
         onClick={() => window.location.href = "/"}
         _active={{bg: "transparent"}}>
           {/* <Link to={"/"}> */}
@@ -98,8 +98,8 @@ const RegisterPage = () => {
           justifyContent="center"
           alignItems="center"
         >
-          <Avatar bg="teal.500" />
-          <Heading color="teal.400" onClick={() => navigate('/')} cursor="pointer">SCG Group</Heading>
+          <Avatar bg="black" />
+          <Heading color="black" onClick={() => navigate('/')} cursor="pointer">SCG Group</Heading>
           <Box minW={{ base: "90%", md: "468px" }}>
             <form>
               <Stack
@@ -162,10 +162,12 @@ const RegisterPage = () => {
                   </InputGroup>
                 </FormControl>
                 <Button
-                  borderRadius={0}
+                  borderRadius={10}
                   variant="solid"
-                  colorScheme="teal"
+                  bg="black"
+                  color="white"
                   width="full"
+                  _hover={{bg: 'white', color: "black", border: '2px solid black'}}
                   onClick={() => handleSubmit()}
                 >
                   Đăng ký
@@ -176,8 +178,8 @@ const RegisterPage = () => {
         </Stack>
         <Flex>
           Bạn đã là thành viên?{" "}
-          <Link color="teal.500" to="/login">
-            <Text color="teal.500" marginStart={'12px'} fontWeight={"medium"}>Đăng nhập</Text>
+          <Link color="black" to="/login">
+            <Text color="black" marginStart={'12px'} fontWeight={"medium"}>Đăng nhập</Text>
           </Link>
         </Flex>
       </Flex>

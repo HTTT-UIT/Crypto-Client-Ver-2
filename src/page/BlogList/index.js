@@ -20,7 +20,8 @@ import {
   Icon,
   Spinner,
 } from '@chakra-ui/react';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
+import { useParams } from 'react-router-dom'
 import { useJwt } from "../../jwt/jwt";
 import MultiSelecCS from '../../component/MuiltiSelect';
 import { MdStar } from 'react-icons/md';
@@ -69,6 +70,9 @@ const ArticleList = () => {
   const [tagIds, setTagIds] = useState("")
   const [options, setOptions] = useState([])
   const [checkSpinner, setCheckSpinner] = useState(false)
+  // const {search} = useParams()
+  const location = useLocation()
+
 
   const fetchData = async (params) => {
     try {
@@ -92,21 +96,33 @@ const ArticleList = () => {
   useEffect(() => {
     setCheckSpinner(true)
     setTimeout(() => {
+    const query = new URLSearchParams(window.location.search)
       fetchData({
         page,
         pageSize,
         tagIds,
         followerId: '',
         authorId: '',
+        search: (query.get("search") !== undefined && query.get("search") !== null) ? query.get("search") : ""
       })
     }, 0)
-  }, [page, pageSize, tagIds])
+  }, [page, pageSize, tagIds, location])
 
   const navigate = useNavigate()
 
   useEffect(() => {
     setPageSize(3)
+    // const query = new URLSearchParams(window.location.search)
+    // fetchData({
+    //   page,
+    //   pageSize,
+    //   tagIds,
+    //   followerId: '',
+    //   authorId: '',
+    //   search: (query.get("search") !== undefined && query.get("search") !== null) ? query.get("search") : ""
+    // })
   }, [navigate])
+
   return (
     <Container maxW={'7xl'} p="12">
       <Box
@@ -118,7 +134,6 @@ const ArticleList = () => {
             <Spinner marginStart={"15px"} />
           )
         }
-
       </Box>
 
       <Box 
@@ -126,7 +141,7 @@ const ArticleList = () => {
         right={"150px"}
         top={"124px"}
         display={"flex"}
-        // zIndex={"999"}
+        zIndex={"524"}
         justifyContent={"right"}>
           <Box
             maxW={"200px"} 
@@ -135,6 +150,7 @@ const ArticleList = () => {
             <MultiSelecCS onChange={(value) => handleFilter(value)} title={"Thể loại"} options={options} />
           </Box>
       </Box>
+
       {/* <Divider marginTop="7" marginBottom="10" /> */}
       {
         (dataItems.length > 0) && (
@@ -156,15 +172,18 @@ const ArticleList = () => {
               marginLeft={{ base: '0', sm: '5%' }}
               marginTop="5%">
               <Link textDecoration="none" _hover={{ textDecoration: 'none' }}>
-                <Image
-                  borderRadius="lg"
-                  src={
-                    (dataItems[0].imageUrl !== undefined && dataItems[0].imageUrl !== null && dataItems[0].imageUrl !== "") ? dataItems[0].imageUrl : 'https://guwahatiplus.com/public/web/images/default-news.png'
-                  }
-                  alt="some good alt text"
-                  objectFit="contain"
-                  onClick={() =>  navigate(`/blog/${ dataItems[0].id}`)}
-                />
+                <Flex justifyContent={"center"}>
+                  <Image
+                    borderRadius="lg"
+                    src={
+                      (dataItems[0].imageUrl !== undefined && dataItems[0].imageUrl !== null && dataItems[0].imageUrl !== "") ? dataItems[0].imageUrl : 'https://guwahatiplus.com/public/web/images/default-news.png'
+                    }
+                    alt="some good alt text"
+                    objectFit="contain"
+                    maxHeight={"300px"}
+                    onClick={() =>  navigate(`/blog/${ dataItems[0].id}`)}
+                  />
+                </Flex>
               </Link>
             </Box>
             <Box zIndex="1" width="100%" position="absolute" height="100%">
@@ -260,6 +279,7 @@ const ArticleList = () => {
                           alt="some text"
                           objectFit="contain"
                           width="100%"
+                          maxHeight={"220px"}
                           transition="0.3s ease-in-out"
                           _hover={{
                             transform: 'scale(1.05)',

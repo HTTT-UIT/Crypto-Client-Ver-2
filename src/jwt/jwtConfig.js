@@ -12,7 +12,7 @@ export default {
   loginEndPoint: "/api/Identity/login",
   indentityEndPoint: "/api/Identity",
   // Article
-  getArticlesEndPoint: (params) => `/api/Blogs/?${params.tagIds}page=${params.page}&pageSize=${params.pageSize}&followerId=${params.followerId}&authorId=${params.authorId}`,
+  getArticlesEndPoint: (params) => `/api/Blogs/?${params.tagIds}page=${params.page}&pageSize=${params.pageSize}&followerId=${params.followerId}&authorId=${params.authorId}&header=${params.search}`,
   getArticleWithIDEndPoint: (params) => `/api/Blogs/${params.id}`,
   getTagsEndPoint: () => `/api/Tags`,
   postReportEndPoint: `/api/Reports`,

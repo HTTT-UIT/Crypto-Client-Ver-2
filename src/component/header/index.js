@@ -17,8 +17,14 @@ import {
   MenuItem,
   MenuDivider,
   Icon,
+  LinkBox,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
+  ScaleFade,
 } from "@chakra-ui/react";
-import { HamburgerIcon } from "@chakra-ui/icons";
+import { CloseIcon, HamburgerIcon, SearchIcon } from "@chakra-ui/icons";
 import { MdAccountCircle, MdArticle, MdBookmark, MdHomeFilled, MdManageAccounts, MdMoney, MdPageview } from 'react-icons/md'
 import { TbPlugOff } from 'react-icons/tb'
 import {Link, useNavigate} from "react-router-dom"
@@ -35,11 +41,13 @@ const Header = (props) => {
   const handleToggle = () => (isOpen ? onClose() : onOpen());
   const navigate = useNavigate()
   const [data, setData] = useState(null)
-  const userId = useJwt().jwt.getUserData().primarysid
-  
+  const userId = useJwt().jwt.getUserData()?.primarysid
+  const [iconSearch, setIconSearch] = useState(true)
+  const [searchValue, setSearchValue] = useState("")
+
   const handleSignOut = () => {
     useJwt().jwt.signOut()
-    window.location.reload()
+    window.location.href = '/'
   }
 
   const fetchData = async () => {
@@ -85,7 +93,7 @@ const Header = (props) => {
       </Box>
 
       <Stack
-        direction={{ base: "column", md: "row" }}
+        direction={{ base: "row", md: "row" }}
         display={{ base: isOpen ? "block" : "none", md: "flex" }}
         width={{ base: "full", md: "auto" }}
         alignItems="center"
@@ -101,11 +109,9 @@ const Header = (props) => {
           onClick={() => navigate('/')}
           _hover={{bg: "black"}}
           _active={{bg: "transparent"}}>
-            {/* <Link to={"/"}> */}
-              <Text fontSize={"sm"}>
-                  TRANG CHỦ
-              </Text>
-            {/* </Link> */}
+          <Text fontSize={"sm"}>
+              TRANG CHỦ
+          </Text>
         </Button>
         <Button
           variant="outline"
@@ -115,11 +121,9 @@ const Header = (props) => {
           onClick={() => navigate('/blog')}
           _hover={{bg: "black"}}
           _active={{bg: "transparent"}}>
-            {/* <Link to={"/blog"}> */}
-              <Text fontSize={"sm"}>
-                  BÀI VIẾT
-              </Text>
-            {/* </Link> */}
+          <Text fontSize={"sm"}>
+              BÀI VIẾT
+          </Text>
         </Button>
         <Button
           variant="outline"
@@ -129,30 +133,83 @@ const Header = (props) => {
           bg={(window.location.pathname === "/about") ? "black" : "transparent"}
           _hover={{bg: "black"}}
           _active={{bg: "transparent"}}>
-            {/* <Link to={"/blog"}> */}
-              <Text fontSize={"sm"}>
-                  GIỚI THIỆU
-              </Text>
-            {/* </Link> */}
+          <Text fontSize={"sm"}>
+              GIỚI THIỆU
+          </Text>
         </Button>
-        {/* <Text fontSize={"lg"}>
-          <Link to={"/blog"}>
-            BÀI VIẾT
-          </Link>
-        </Text> */}
       </Stack>
+      {
+        iconSearch && (
+          <Box
+            cursor={"pointer"}
+            bg="transperant" 
+            border={"2px solid black"}
+            color="black"
+            p="5px 12px 5px 12px" 
+            borderRadius={"10"} 
+            textAlign="center" 
+            alignItems={"center"}
+            onClick={() => setIconSearch(!iconSearch)}
+            >
+            <SearchIcon 
+              w='5' 
+              h='5'
+              cursor={"pointer"}
+            />
+          </Box>
+        )
+      }
+      {
+      <Box
+        display={(!iconSearch) ? "block" : "none"}
+      >
+        <ScaleFade initialScale={0.9} in={!iconSearch}>
+            <InputGroup 
+            >
+              <InputLeftElement
+                pointerEvents='none'
+                children={<SearchIcon color='gray.300' />}
+              />
+              <Input 
+                type='tel' 
+                placeholder='Tìm kiếm bài viết' 
+                maxWidth={"400px"} 
+                bg="white" 
+                color={"black"}
+                value={searchValue}
+                onChange={e => setSearchValue(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    navigate(`/blog/?search=${e.target.value}`)
+                  }
+                }}
+              />
+              <InputRightElement 
+                children={<CloseIcon color='black' />} 
+                onClick={() => {
+                  setIconSearch(!iconSearch)
+                  setSearchValue("")
+                  navigate(`/blog`)
+                }}
+                cursor="pointer"
+              />
+            </InputGroup>
+        </ScaleFade>
+      </Box>
+      }
       {
         (useJwt().jwt.getToken() === undefined || useJwt().jwt.getToken() === null) && (
           <>
             <Box
               display={{ base: isOpen ? "block" : "none", md: "block" }}
               mt={{ base: 4, md: 0 }}
+              marginStart="30px"
             >
               <Button
                 size="sm"
                 variant="solid"
                 backgroundColor="white"
-                _hover={{ bg: "teal.700", borderColor: "teal.700", textColor: "white" }}
+                _hover={{ bg: "black", border: "1px solid white", textColor: "white" }}
                 marginEnd="12px"
                 color={"black"}
                 onClick={() => navigate("/login")}
@@ -167,7 +224,7 @@ const Header = (props) => {
               <Button
                 size="sm"
                 variant="outline"
-                _hover={{ bg: "teal.700", borderColor: "teal.700" }}
+                _hover={{ bg: "black", border: "1px solid white", textColor: "white"}}
                 onClick={() => navigate("/register")}
               >
                   Đăng ký
@@ -178,11 +235,11 @@ const Header = (props) => {
       }
       {
         (useJwt().jwt.getToken() !== undefined && useJwt().jwt.getToken() !== null) && (
-          <Stack direction='row' spacing={4} marginStart={12}>
+          <Stack direction='row' spacing={4} marginStart={8}>
             <Menu>
               <MenuButton me="4">
                   <Flex>
-                    <Text border={"solid"} borderColor="black" p="1px 7px 1px 7px" textColor={"black"} fontSize="md" fontWeight={"700"} m={2}>{(data !== null && data.name !== undefined && data.name !== null) ? data.name : ''}</Text>
+                    <Text border={"dotted"} borderRadius="10" borderColor="black" p="1px 7px 1px 7px" textColor={"black"} fontSize="md" fontWeight={"700"} m={2}>{(data !== null && data.name !== undefined && data.name !== null) ? data.name : ''}</Text>
                     <Avatar boxShadow={"xl"} src= { (data !== null && data.profileImageUrl !== undefined && data.profileImageUrl !== null) ? data.profileImageUrl : 'https://bit.ly/dan-abramov'}>
                       <AvatarBadge boxSize='1.25em' bg='green.500'/>
                     </Avatar>

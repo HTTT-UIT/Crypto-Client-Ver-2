@@ -105,7 +105,8 @@ const MyArticle = () => {
         pageSize,
         tagIds,
         followerId: !flag ? userId : '',
-        authorId: flag ? userId : ''
+        authorId: flag ? userId : '',
+        search: ''
       })
     }, 0)
   }, [page, pageSize, tagIds, flag])

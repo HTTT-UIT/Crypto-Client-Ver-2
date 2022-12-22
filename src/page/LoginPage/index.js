@@ -82,9 +82,9 @@ const LoginPage = () => {
     <Button 
         leftIcon={<Icon as={MdArrowBack} w="4" h="4"/>} 
         margin={"12px"}
-        bg={"teal.500"}
+        bg={"black"}
         color={"white"}
-        _hover={{bg: "white", color: "teal.500"}}
+        _hover={{bg: "white", color: "black"}}
         onClick={() => window.location.href = "/"}
         _active={{bg: "transparent"}}>
         <Text fontSize={"sm"}>
@@ -105,8 +105,8 @@ const LoginPage = () => {
           justifyContent="center"
           alignItems="center"
         >
-          <Avatar bg="teal.500" />
-          <Heading color="teal.400">SCG Group</Heading>
+          <Avatar bg="black" />
+          <Heading color="black">SCG Group</Heading>
           <Box minW={{ base: "90%", md: "468px" }}>
             <form>
               <Stack
@@ -148,9 +148,12 @@ const LoginPage = () => {
                   </FormHelperText>
                 </FormControl>
                 <Button
-                  borderRadius={0}
+                  borderRadius={10}
+                  _hover={{bg: "white", color: "black", border: "2px solid black"}}
                   variant="solid"
-                  colorScheme="teal"
+                  // colorScheme="black"
+                  color={"white"}
+                  bg={"black"}
                   width="full"
                   onClick={handleSubmit}
                 >
@@ -163,7 +166,7 @@ const LoginPage = () => {
         <Flex>
           Bạn chưa là thành viên?{" "}
           <Link to="/register">
-            <Text color="teal.500" marginStart={"12px"} fontWeight={"medium"}>Đăng ký ngay</Text>
+            <Text color="black" marginStart={"12px"} fontWeight={"medium"}>Đăng ký ngay</Text>
           </Link>
         </Flex>
       </Flex>
