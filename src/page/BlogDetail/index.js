@@ -94,7 +94,7 @@ const BlogDetail = () => {
 
   const handleFilter = () => {
     const arrTagId = data.tags?.map(item => `tagIds=${item.id}&`)
-    setTagIds(arrTagId)
+    // setTagIds(arrTagId)
     fetchArticles({
       page,
       pageSize,
@@ -116,7 +116,6 @@ const BlogDetail = () => {
       loadComments()
     }, 700);
     handleFilter()
-   
   }, [data, pageSize])
   
   const handleReport = async () => {
@@ -431,7 +430,7 @@ const BlogDetail = () => {
                       </div>
                     )
                   })
-                }              
+                }
               </Flex>
             </CardFooter>
           </Card>
@@ -442,22 +441,28 @@ const BlogDetail = () => {
         <Divider/>
         <Wrap width={"100%"} spacing="40px" marginTop="5" justify={"center"}>
           {
-            articleData.items?.map(item => {
+            articleData.items?.map((item, index) => {
+              console.log("id", item.id)
               return (
-                <WrapItem width={{ base: '100%', sm: '45%', md: '45%', lg: '30%' }} key={item.id}>
+                <WrapItem width={{ base: '100%', sm: '45%', md: '45%', lg: '30%' }} key={index}>
                   <Box 
                     w="100%" 
-                    h={"550px"}
+                    h={"500px"}
                     position={"relative"}
                     padding={"10px"}
                     borderRadius={"10px"}
                     borderStyle={"dotted"}
                     borderWidth={"2px"}>
                     <Box borderRadius="lg" overflow="hidden">
-                      {/* <Link 
+                      <Link 
                         textDecoration="none" 
                         _hover={{ textDecoration: 'none' }}
-                        > */}
+                        to={`/blog/${item.id}`}
+                        // onClick={() =>  {
+                        //   alert(item.id)
+                        //   navigate(`/blog/${item.id}`)
+                        // }}
+                        >
                         <Image
                           transform="scale(1.0)"
                           src={
@@ -467,17 +472,15 @@ const BlogDetail = () => {
                           alt="some text"
                           objectFit="contain"
                           width="100%"
-                          h={"250px"}
+                          maxHeight={"220px"}
                           transition="0.3s ease-in-out"
                           _hover={{
                             transform: 'scale(1.05)',
-                            cursor: 'pointer'
                           }}
-                          onClick={() =>  navigate(`/blog/${item.id}`)}
                         />
-                      {/* </Link> */}
+                      </Link>
                     </Box>
-                    <BlogTags tags={item.tags.map(item => item.title)} marginTop="3" />
+                    <BlogTags tags={item.tags.map(item2 => item2.title)} marginTop="3" />
                     <Box
                       display={"flex"}
                       alignItems={"center"}
@@ -499,17 +502,12 @@ const BlogDetail = () => {
                           )
                         }
                     </Box>
-                    <Heading 
-                      fontSize="xl" 
-                      marginTop="2" 
-                      onClick={() =>  navigate(`/blog/${item.id}`)}
-                      _hover={{
-                        textDecoration: 'underline'
-                      }}
-                    >
+                    <Heading fontSize="xl" marginTop="2">
                       <Link 
                         textDecoration="none" 
                         _hover={{ textDecoration: 'none' }}
+                        to={`/blog/${item.id}`}
+                        // onClick={() => navigate(`/blog/${item.id}`)}
                         >
                         {item.header}
                       </Link>
@@ -518,7 +516,7 @@ const BlogDetail = () => {
                       textAlign={"justify"} 
                       fontSize="md" 
                       marginTop="2" 
-                      dangerouslySetInnerHTML={{__html: item.subcontent}}>
+                      dangerouslySetInnerHTML={{__html: item.subContent}}>
                     </Box>
                     <BlogAuthor
                       image={item.authorImageUrl}
