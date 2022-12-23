@@ -17,6 +17,7 @@ import {  MultiSelectTheme } from 'chakra-multiselect'
 import UserProfileEdit from './page/MyAccout';
 import MyArticle from './page/MyArticle';
 import AboutPage from './page/About';
+import CoinFPage from './page/CoinFPage';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
       {
         path: "/about",
         element: <AboutPage />,
+      },
+      {
+        path: "/favourite-coin",
+        element: <CoinFPage />,
       },
     ],
     

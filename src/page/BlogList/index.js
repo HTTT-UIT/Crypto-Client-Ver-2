@@ -240,10 +240,11 @@ const ArticleList = () => {
               </Heading>
             <Box
               // as="p"
+              maxHeight={"300px"}
               marginTop="2"
               color={useColorModeValue('gray.700', 'gray.200')}
               fontSize="lg"
-              dangerouslySetInnerHTML={{__html: dataItems[0]["content"]}}>
+              dangerouslySetInnerHTML={{__html: dataItems[0]["subContent"]}}>
             </Box>
             <BlogAuthor image={dataItems[0]["authorImageUrl"]} name={dataItems[0]["authorName"]} date={new Date(dataItems[0]["createdAt"])} />
           </Box>
@@ -321,7 +322,7 @@ const ArticleList = () => {
                       textAlign={"justify"} 
                       fontSize="md" 
                       marginTop="2" 
-                      dangerouslySetInnerHTML={{__html: item.content}}>
+                      dangerouslySetInnerHTML={{__html: item.subContent}}>
                     </Box>
                     <BlogAuthor
                       image={item.authorImageUrl}

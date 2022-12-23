@@ -61,6 +61,16 @@ export default class JwtService {
     })
   }
 
+  async getDataWithID(id) {
+    return axios({
+      method: 'get',
+      url: this.jwtConfig.coinDetailEndPoint(id),
+      headers: {
+        Authorization: this.jwtConfig.key
+      }
+    })
+  }
+
   // auth
   async login(params) {
     return axios({
@@ -221,6 +231,35 @@ export default class JwtService {
         "account-id": params.userId,
       },
       data: formData
+    })
+  }
+
+  // Coin
+  async postFavouriteCoin(params) {
+    return axios({
+      method: "post",
+      url: this.jwtConfig.postFavouriteEndPoint(params),
+      headers: {
+        'Content-Type': 'application/json',
+        "account-id": params.userId,
+      },
+      data: JSON.stringify({
+        userId: params.userId
+      })
+    })
+  }
+
+  async getCoin(params) {
+    return axios({
+      method: "get",
+      url: this.jwtConfig.getCoinEndPoint(params),
+    })
+  }
+
+  async getFavouriteCoin(params) {
+    return axios({
+      method: 'get',
+      url: this.jwtConfig.getCoinFavouriteEndPoint(params)
     })
   }
 }

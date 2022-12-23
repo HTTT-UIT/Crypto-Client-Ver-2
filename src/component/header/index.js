@@ -189,7 +189,9 @@ const Header = (props) => {
                 onClick={() => {
                   setIconSearch(!iconSearch)
                   setSearchValue("")
-                  navigate(`/blog`)
+                  const params = new URLSearchParams(window.location.search)
+                  if (params.get('search') !== undefined && params.get('search') !== null)
+                    navigate(`/blog`)
                 }}
                 cursor="pointer"
               />
@@ -249,7 +251,7 @@ const Header = (props) => {
                 <MenuGroup title='Cá nhân'>
                   <MenuItem icon={<Icon as={MdAccountCircle} w={6} h={6} color="green"/>} onClick={() => navigate('/my-account')}>Hồ sơ của bạn</MenuItem>
                   <MenuItem icon={<Icon as={MdBookmark} w={6} h={6} color="black"/>} onClick={() => navigate('/my-article')}>Bài viết yêu thích</MenuItem>
-                  <MenuItem icon={<Icon as={MdMoney} w={6} h={6} color="orange"/>}>Tiền ảo yêu thích</MenuItem>
+                  <MenuItem icon={<Icon as={MdMoney} w={6} h={6} color="orange"/>} onClick={() => navigate('/favourite-coin')}>Tiền ảo yêu thích</MenuItem>
                 </MenuGroup>
                 <MenuDivider />
                 <MenuGroup title='Quản trị'>

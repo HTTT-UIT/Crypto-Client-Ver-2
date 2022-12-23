@@ -69,7 +69,9 @@ const BlogAuthor = (props) => {
 
 const MyArticle = () => {
   const [data, setData] = useState(null)
+  const [data2, setData2] = useState(null)
   const [dataItems, setDataItems] = useState([])
+  const [dataItem2s, setDataItem2s] = useState([])
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(3)
   const [tagIds, setTagIds] = useState("")
@@ -83,9 +85,15 @@ const MyArticle = () => {
       const response = await useJwt().jwt.getArticles(params)
       setCheckSpinner(false)
       const optionsResponse = await useJwt().jwt.getTags()
-      console.log(optionsResponse)
-      setDataItems(response.data.items)
-      setData(response.data)
+      // console.log(optionsResponse)
+      if (flag) {
+        setDataItem2s(response.data.items)
+        setData2(response.data)
+      }
+      else {
+        setDataItems(response.data.items)
+        setData(response.data)
+      }
       setOptions([{id: -1 , title: "Tất cả"}, ...optionsResponse.data.items])
     } catch (error) {
     }
@@ -99,6 +107,7 @@ const MyArticle = () => {
 
   useEffect(() => {
     setCheckSpinner(true)
+    setDataItems([])
     setTimeout(() => {
       fetchData({
         page,
@@ -116,6 +125,7 @@ const MyArticle = () => {
   useEffect(() => {
     setPageSize(3)
   }, [navigate])
+
   return (
     <Container maxW={'7xl'} p="12">
       <Box
@@ -165,7 +175,7 @@ const MyArticle = () => {
             }
             {/* <Divider marginTop="7" marginBottom="10" /> */}
             {
-              (dataItems.length > 0) && (
+              (dataItems.length > 0 && !flag) && (
               <>
                 <Box
                   position={"relative"}
@@ -185,15 +195,18 @@ const MyArticle = () => {
                       marginLeft={{ base: '0', sm: '5%' }}
                       marginTop="5%">
                       <Link textDecoration="none" _hover={{ textDecoration: 'none' }}>
-                        <Image
-                          borderRadius="lg"
-                          src={
-                            (dataItems[0].imageUrl !== undefined && dataItems[0].imageUrl !== null && dataItems[0].imageUrl !== "") ? dataItems[0].imageUrl : 'https://guwahatiplus.com/public/web/images/default-news.png'
-                          }
-                          alt="some good alt text"
-                          objectFit="contain"
-                          onClick={() =>  navigate(`/blog/${ dataItems[0].id}`)}
-                        />
+                        <Flex justifyContent={"center"}>
+                          <Image
+                            borderRadius="lg"
+                            src={
+                              (dataItems[0].imageUrl !== undefined && dataItems[0].imageUrl !== null && dataItems[0].imageUrl !== "") ? dataItems[0].imageUrl : 'https://guwahatiplus.com/public/web/images/default-news.png'
+                            }
+                            alt="some good alt text"
+                            objectFit="contain"
+                            maxHeight={"300px"}
+                            onClick={() =>  navigate(`/blog/${ dataItems[0].id}`)}
+                          />
+                        </Flex>
                       </Link>
                     </Box>
                     <Box zIndex="1" width="100%" position="absolute" height="100%">
@@ -253,7 +266,7 @@ const MyArticle = () => {
                       marginTop="2"
                       color={useColorModeValue('gray.700', 'gray.200')}
                       fontSize="lg"
-                      dangerouslySetInnerHTML={{__html: dataItems[0]["content"]}}>
+                      dangerouslySetInnerHTML={{__html: dataItems[0]["subContent"]}}>
                     </Box>
                     <BlogAuthor image={dataItems[0]["authorImageUrl"]} name={dataItems[0]["authorName"]} date={new Date(dataItems[0]["createdAt"])} />
                   </Box>
@@ -265,7 +278,7 @@ const MyArticle = () => {
             <Wrap spacing="40px" marginTop="5" justify={"center"}>
               {
                 dataItems.map((item, index) => {
-                  if (index > 0) {
+                  if (index > 0 && !flag) {
                     return (
                       <WrapItem width={{ base: '100%', sm: '45%', md: '45%', lg: '30%' }} key={index}>
                         <Box 
@@ -290,6 +303,7 @@ const MyArticle = () => {
                                 alt="some text"
                                 objectFit="contain"
                                 width="100%"
+                                maxHeight={"220px"}
                                 transition="0.3s ease-in-out"
                                 _hover={{
                                   transform: 'scale(1.05)',
@@ -331,7 +345,7 @@ const MyArticle = () => {
                             textAlign={"justify"} 
                             fontSize="md" 
                             marginTop="2" 
-                            dangerouslySetInnerHTML={{__html: item.content}}>
+                            dangerouslySetInnerHTML={{__html: item.subContent}}>
                           </Box>
                           <BlogAuthor
                             image={item.authorImageUrl}
@@ -348,7 +362,7 @@ const MyArticle = () => {
             </Wrap>
             {/* <Divider marginTop="5" /> */}
             {
-              (data === null || (data !== null && data.pageSize < data.totalRow)) && (
+              ((!flag && data !== null && data.pageSize < data.totalRow)) && (
                 <Box>
                   <Flex justify={"center"}>
                     <Button
@@ -396,7 +410,7 @@ const MyArticle = () => {
             }
             {/* <Divider marginTop="7" marginBottom="10" /> */}
             {
-              (dataItems.length > 0) && (
+              (dataItem2s.length > 0 && flag) && (
               <Box
                 position={"relative"}
                 marginTop={{ base: '1', sm: '5' }}
@@ -415,15 +429,18 @@ const MyArticle = () => {
                     marginLeft={{ base: '0', sm: '5%' }}
                     marginTop="5%">
                     <Link textDecoration="none" _hover={{ textDecoration: 'none' }}>
-                      <Image
-                        borderRadius="lg"
-                        src={
-                          (dataItems[0].imageUrl !== undefined && dataItems[0].imageUrl !== null && dataItems[0].imageUrl !== "") ? dataItems[0].imageUrl : 'https://guwahatiplus.com/public/web/images/default-news.png'
-                        }
-                        alt="some good alt text"
-                        objectFit="contain"
-                        onClick={() =>  navigate(`/blog/${ dataItems[0].id}`)}
-                      />
+                      <Flex justifyContent={"center"}>
+                        <Image
+                          borderRadius="lg"
+                          src={
+                            (dataItem2s[0].imageUrl !== undefined && dataItem2s[0].imageUrl !== null && dataItem2s[0].imageUrl !== "") ? dataItem2s[0].imageUrl : 'https://guwahatiplus.com/public/web/images/default-news.png'
+                          }
+                          alt="some good alt text"
+                          objectFit="contain"
+                          maxHeight={"300px"}
+                          onClick={() =>  navigate(`/blog/${ dataItem2s[0].id}`)}
+                        />
+                      </Flex>
                     </Link>
                   </Box>
                   <Box zIndex="1" width="100%" position="absolute" height="100%">
@@ -445,7 +462,7 @@ const MyArticle = () => {
                   justifyContent="center"
                   marginTop={{ base: '3', sm: '0' }}>
                   <BlogTags tags={
-                    dataItems[0].tags.map(item => item.title)
+                    dataItem2s[0].tags.map(item => item.title)
                   } />
                   <Box
                     display={"flex"}
@@ -453,17 +470,17 @@ const MyArticle = () => {
                     marginTop="12px"
                   >
                     {
-                      (dataItems[0].totalFollower > 1) && (
-                        <Text color={"yellow.800"}>{dataItems[0].totalFollower}</Text>
+                      (dataItem2s[0].totalFollower > 1) && (
+                        <Text color={"yellow.800"}>{dataItem2s[0].totalFollower}</Text>
                       )
                     }
                     {
-                      (dataItems[0].totalFollower > 0) && (
+                      (dataItem2s[0].totalFollower > 0) && (
                         <Icon as={MdStar} w="7" h="7" color={"yellow.700"} />
                       )
                     }
                     {
-                      (dataItems[0].totalFollower <= 0) && (
+                      (dataItem2s[0].totalFollower <= 0) && (
                         <Text color={"yellow.800"}>Chưa đánh giá</Text>
                       )
                     }
@@ -472,9 +489,9 @@ const MyArticle = () => {
                       <Link 
                         textDecoration="none" 
                         _hover={{ textDecoration: 'none' }}
-                        onClick={() =>  navigate(`/blog/${ dataItems[0].id}`)}>
+                        onClick={() =>  navigate(`/blog/${ dataItem2s[0].id}`)}>
                         {
-                          dataItems[0]['header']
+                          dataItem2s[0]['header']
                         }
                       </Link>
                     </Heading>
@@ -483,9 +500,9 @@ const MyArticle = () => {
                     marginTop="2"
                     color={useColorModeValue('gray.700', 'gray.200')}
                     fontSize="lg"
-                    dangerouslySetInnerHTML={{__html: dataItems[0]["content"]}}>
+                    dangerouslySetInnerHTML={{__html: dataItem2s[0]["subcontent"]}}>
                   </Box>
-                  <BlogAuthor image={dataItems[0]["authorImageUrl"]} name={dataItems[0]["authorName"]} date={new Date(dataItems[0]["createdAt"])} />
+                  <BlogAuthor image={dataItem2s[0]["authorImageUrl"]} name={dataItem2s[0]["authorName"]} date={new Date(dataItem2s[0]["createdAt"])} />
                 </Box>
               </Box>
               )
@@ -493,8 +510,8 @@ const MyArticle = () => {
             {/* <Divider marginTop="5" /> */}
             <Wrap spacing="40px" marginTop="5" justify={"center"}>
               {
-                dataItems.map((item, index) => {
-                  if (index > 0) {
+                dataItem2s.map((item, index) => {
+                  if (index > 0 && flag) {
                     return (
                       <WrapItem width={{ base: '100%', sm: '45%', md: '45%', lg: '30%' }} key={index}>
                         <Box 
@@ -576,7 +593,7 @@ const MyArticle = () => {
               }
             </Wrap>
             {
-              (data === null || (data !== null && data.pageSize < data.totalRow)) && (
+              ((flag && data2 !== null && data2.pageSize < data2.totalRow)) && (
                 <>
                   <Divider marginTop="5" />
                   <Box>
@@ -584,7 +601,7 @@ const MyArticle = () => {
                       <Button
                         marginTop={"12px"}
                         bgColor={"black"}
-                        isLoading={data === null || (data !== null && data.pageSize !== pageSize)}
+                        isLoading={data2 === null || (data2 !== null && data2.pageSize !== pageSize)}
                         loadingText='Đang tải'
                         spinnerPlacement='start'
                         // leftIcon={<Icon as={MdArticle} w="4" h="4"/>}

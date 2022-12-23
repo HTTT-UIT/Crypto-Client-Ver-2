@@ -98,10 +98,14 @@ const BlogDetail = () => {
     setTagIds([])
   }
 
+  const refLC = useRef()
   useEffect(() => {
     const userVote = data.followUsers?.filter(item => item.id === userId)
     setIsVote(userVote?.length > 0)
-    loadComments()
+    clearInterval(refLC.current)
+    refLC.current = setInterval(() => {
+      loadComments()
+    }, 700);
     handleFilter()
     fetchArticles({
       page,
@@ -109,7 +113,7 @@ const BlogDetail = () => {
       tagIds
     })
   }, [data, pageSize])
-
+  
   const handleReport = async () => {
     try {
       const response = await useJwt().jwt.postReport({
@@ -152,7 +156,13 @@ const BlogDetail = () => {
         content: commentRef.current.value
       }) 
       commentRef.current.value = ""
-      fetchData()
+      setTimeout(() => {
+        document.querySelector(`#comment${dataComments.items.length}`).scrollIntoView({
+          behavior: 'smooth'
+        });
+        // window.location.href = `#comment${dataComments.items.length}`
+      }, 1000)
+      // fetchData()
       // handleSuccess("Thành công", () => {
       // })
     } catch (error) {
@@ -180,7 +190,7 @@ const BlogDetail = () => {
             userId,
             commentId
           })
-          fetchData()
+          // fetchData()
         }
       })
       // setDataComments(response.data)
@@ -192,6 +202,7 @@ const BlogDetail = () => {
   const handleHours = (sDate) => {
     const datePast = new Date(sDate)
     const dateCurrent = new Date()
+    console.log(dateCurrent, ' ', datePast)
     let period = Math.abs(dateCurrent.getTime() - datePast.getTime())
     period = Math.round(period / 1000)
     if (period < 60) {
@@ -302,7 +313,7 @@ const BlogDetail = () => {
                   } />
                 )
               }
-              <Box fontSize={"20px"}
+              <Box fontSize={"20px"} textAlign="justify"
                 dangerouslySetInnerHTML={{__html: data.content}}
               >
               </Box>
@@ -339,12 +350,19 @@ const BlogDetail = () => {
             </Alert>
               <Stack width={"100%"} paddingTop="24px">
                 <Heading fontSize={"lg"}>{'BÌNH LUẬN'}</Heading>
-                <Textarea
-                  // borderRadius={"10px"}
+                <Input
+                  type={"text"}
+                  // overflowWrap="break-word"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleComment()
+                    }
+                  }}
+                  textStyle=""
                   ref={commentRef}
                   placeholder={(userId === undefined || userId === null) ? 'Tính năng này đang bị khóa...' : 'Hãy cho chúng tôi biết bạn đang suy nghĩ gì?'}
                   width={"100%"}
-                  height="120px"
+                  height="50px"
                   size='lg'
                   readOnly={(userId === undefined || userId === null) ? true : false}
                 />
@@ -371,9 +389,10 @@ const BlogDetail = () => {
             <CardFooter>
               <Flex direction={"column"} width="100%">
                 {
-                  dataComments.items?.slice(0).reverse().map(item => {
+                  // dataComments.items?.slice(0).reverse().map(item => {
+                  dataComments.items?.map((item, index) => {
                     return (
-                      <div key={item.id}>
+                      <div id={`comment${index}`} key={item.id}>
                         <Divider marginTop="14px" marginBottom="14px"/>
                         <Flex justify="space-between" align="center">
                           <Flex justify={"start"} align="center" width="100%">
@@ -396,7 +415,7 @@ const BlogDetail = () => {
                                 </Text>
                                 <Text textAlign={"start"} fontSize="12px">
                                   {
-                                    handleHours(item.createdAt)
+                                    handleHours(item.commentTime)
                                   }
                                 </Text>
                               </Stack>

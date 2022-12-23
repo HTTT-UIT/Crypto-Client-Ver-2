@@ -6,6 +6,7 @@ export default {
   key: "Bearer 1ac00da5-099b-4dbd-a98d-b7fe9ef16a1e",
 
   coinAssetsEndPoint: (limit) => `https://api.coincap.io/v2/assets?limit=${limit}`,
+  coinDetailEndPoint: (id) => `https://api.coincap.io/v2/assets/${id}`,
 
   // Auth
   registerEndPoint: "/api/Identity/signup",
@@ -24,6 +25,9 @@ export default {
   getUserEndPoint: (params) => `/api/Users/${params.userId}`,
   updateUserEndPoint: `/api/Users`,
   updateUserAvatarEndPoint: `/api/Users/avatar`,
-  
+  // Coin
+  postFavouriteEndPoint: (params) => `/api/Coins/${params.coinID}/favourite`,
+  getCoinEndPoint: (params) => `/api/Coins/${params.coinID}`,
+  getCoinFavouriteEndPoint: (params) => `/api/coins/favourite/?userId=${params.userId}`
   // sendReport: (params) => ``
 }
