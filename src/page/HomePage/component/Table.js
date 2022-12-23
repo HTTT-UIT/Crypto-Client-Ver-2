@@ -48,6 +48,7 @@ function numberWithCommas(x) {
 }
 
 const TableCS = ({data}) => {
+  const userId = useJwt().jwt.getUserData()?.primarysid
   const [stateData, setStateData] = useState(data)
   const state = useRef([])
   useMemo(() => {
@@ -154,7 +155,7 @@ const TableCS = ({data}) => {
 
             <ModalFooter>
               <Flex>
-                <Button leftIcon={(checkFavourite) ? <FaBellSlash h={5} w={5} color={"orange.600"}/> : <BellIcon h={5} w={5} color={"orange.600"}/>} marginRight="12px" color={"orange.600"} onClick={() => {
+                <Button disabled={userId === undefined} leftIcon={(checkFavourite) ? <FaBellSlash h={5} w={5} color={"orange.600"}/> : <BellIcon h={5} w={5} color={"orange.600"}/>} marginRight="12px" color={"orange.600"} onClick={() => {
                   handleFollow()
                 }}>{(checkFavourite) ? "Hủy theo dõi" : "Theo dõi"}</Button>
                 <Button onClick={onClose}>Trở lại</Button>

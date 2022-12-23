@@ -93,12 +93,21 @@ const BlogDetail = () => {
   }, [navigate])
 
   const handleFilter = () => {
-    // const arrTagId = data.tags.map(item => `tagIds=${item.id}&`)
-    // setTagIds(arrTagId)
-    setTagIds([])
+    const arrTagId = data.tags?.map(item => `tagIds=${item.id}&`)
+    setTagIds(arrTagId)
+    fetchArticles({
+      page,
+      pageSize,
+      tagIds: arrTagId,
+      followerId: '',
+      authorId: '',
+      search: ''
+    })
+    // setTagIds([])
   }
 
   const refLC = useRef()
+
   useEffect(() => {
     const userVote = data.followUsers?.filter(item => item.id === userId)
     setIsVote(userVote?.length > 0)
@@ -107,11 +116,7 @@ const BlogDetail = () => {
       loadComments()
     }, 700);
     handleFilter()
-    fetchArticles({
-      page,
-      pageSize,
-      tagIds
-    })
+   
   }, [data, pageSize])
   
   const handleReport = async () => {
@@ -269,6 +274,7 @@ const BlogDetail = () => {
             <CardHeader>
               <Flex justify={"space-between"}>
                 <Button 
+                  disabled={userId === undefined}
                   leftIcon={<Icon as={MdFlag} w="4" h="4" color={"red"}/>} 
                   variant="outline"
                   color={"black"}
@@ -441,7 +447,7 @@ const BlogDetail = () => {
                 <WrapItem width={{ base: '100%', sm: '45%', md: '45%', lg: '30%' }} key={item.id}>
                   <Box 
                     w="100%" 
-                    h={"500px"}
+                    h={"550px"}
                     position={"relative"}
                     padding={"10px"}
                     borderRadius={"10px"}
@@ -512,7 +518,7 @@ const BlogDetail = () => {
                       textAlign={"justify"} 
                       fontSize="md" 
                       marginTop="2" 
-                      dangerouslySetInnerHTML={{__html: item.content}}>
+                      dangerouslySetInnerHTML={{__html: item.subcontent}}>
                     </Box>
                     <BlogAuthor
                       image={item.authorImageUrl}
